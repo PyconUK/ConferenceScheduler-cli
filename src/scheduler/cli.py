@@ -104,9 +104,6 @@ def rebuild(solution_dir, build_dir):
     logger.info('Validating schedule...')
     if is_valid_solution(solution, definition['events'], definition['slots']):
         logger.info('Imported solution is valid')
-        io.export_solution_and_definition(
-            definition['resources'], definition['events'],
-            definition['slots'], solution)
         io.build_output(
             definition['resources'], definition['events'],
             definition['slots'], solution)
