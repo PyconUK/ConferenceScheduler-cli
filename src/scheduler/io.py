@@ -48,10 +48,29 @@ def import_proposals(resources):
                     'duration': duration,
                     'person': slugify(row['Name']),
                     'tags': [],
-                    'event_type': event_type
-                })
+                    'event_type': event_type})
     logger.debug(f'\nreources:\n{pformat(proposals)}')
     return proposals
+
+
+def import_solution():
+    """Import a previously computed schedule from a .csv file"""
+    solution = []
+    with Path(session.folders['solution'], 'solution.csv').open('r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            solution.append((row['event_index'], row['slot_index']))
+        logger.debug(f'\nreources:\n{pformat(solution)}')
+    return solution
+
+
+def import_schedule_definition():
+    """Import previously pickled schedule"""
+    pickle_file = Path(session.folders['solution'], 'scheduler.pickle')
+    with pickle_file.open('rb') as f:
+        bundle = pickle.load(f)
+    logger.debug(f'\nbundle:\n{pformat(bundle)}')
+    return bundle
 
 
 @uses_output_folders

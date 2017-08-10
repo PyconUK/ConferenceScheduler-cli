@@ -3,6 +3,8 @@ import time
 from pathlib import Path
 
 import click
+from conference_scheduler.validator import (
+    is_valid_solution, solution_violations)
 import daiquiri
 
 import scheduler.calculate as calc
@@ -66,3 +68,13 @@ def build(solver, input_dir, build_dir):
 
     elapsed_time = time.time() - start_time
     logger.info(f'Completed in {round(elapsed_time, 2)}s')
+
+
+@scheduler.command
+def validate():
+    solution = io.import_solution()
+    definition = io.import_schedule_definition()
+    if is_valid_solution(solution, definition['events'], definition['slots']):
+        logger.info('Imported solution is valid')
+    else:
+        logger.error('Imported solution is invalid')
