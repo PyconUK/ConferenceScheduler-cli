@@ -20,11 +20,7 @@ logger = daiquiri.getLogger(__name__)
     '--verbosity', '-v', default='info',
     type=click.Choice(['critical', 'error', 'warning', 'info', 'debug']),
     help='Logging verbosity')
-@click.option(
-    '--solution_dir', '-s', default=None, help='Directory for solution files')
-def scheduler(verbosity, solution_dir):
-    if solution_dir:
-        session.folders['solution'] = Path(solution_dir)
+def scheduler(verbosity):
     logging.setup(verbosity)
 
 
@@ -37,12 +33,17 @@ def scheduler(verbosity, solution_dir):
 @click.option(
     '--input_dir', '-i', default=None, help='Directory for input files')
 @click.option(
+    '--solution_dir', '-s', default=None, help='Directory for solution files')
+@click.option(
     '--build_dir', '-b', default=None, help='Directory for output yaml files')
-def build(solver, input_dir, build_dir):
+def build(solver, input_dir, solution_dir, build_dir):
     start_time = time.time()
 
     if input_dir:
         session.folders['input'] = Path(input_dir)
+
+    if solution_dir:
+        session.folders['solution'] = Path(solution_dir)
 
     if build_dir:
         session.folders['build'] = Path(build_dir)
@@ -70,14 +71,53 @@ def build(solver, input_dir, build_dir):
 
 
 @scheduler.command()
-def validate():
+@click.option(
+    '--solution_dir', '-s', default=None, help='Directory for solution files')
+def validate(solution_dir):
     start_time = time.time()
+
+    if solution_dir:
+        session.folders['solution'] = Path(solution_dir)
 
     solution = io.import_solution()
     definition = io.import_schedule_definition()
     logger.info('Validating schedule...')
     if is_valid_solution(solution, definition['events'], definition['slots']):
         logger.info('Imported solution is valid')
+    else:
+        for v in solution_violations(
+                solution, definition['events'], definition['slots']):
+            logger.error(v)
+
+    elapsed_time = time.time() - start_time
+    logger.info(f'Completed in {round(elapsed_time, 2)}s')
+
+
+@scheduler.command()
+@click.option(
+    '--solution_dir', '-s', default=None, help='Directory for solution files')
+@click.option(
+    '--build_dir', '-b', default=None, help='Directory for output yaml files')
+def rebuild(solution_dir, build_dir):
+    start_time = time.time()
+
+    if solution_dir:
+        session.folders['solution'] = Path(solution_dir)
+
+    if build_dir:
+        session.folders['build'] = Path(build_dir)
+
+    solution = io.import_solution()
+    definition = io.import_schedule_definition()
+    logger.info('Validating schedule...')
+    if is_valid_solution(solution, definition['events'], definition['slots']):
+        logger.info('Imported solution is valid')
+        io.export_solution_and_definition(
+            definition['resources'], definition['events'],
+            definition['slots'], solution)
+        io.build_output(
+            definition['resources'], definition['events'],
+            definition['slots'], solution)
     else:
         for v in solution_violations(
                 solution, definition['events'], definition['slots']):
