@@ -3,13 +3,13 @@ import pickle
 from datetime import datetime
 from pathlib import Path
 from pprint import pformat
+import shutil
 
 import daiquiri
-from conference_scheduler import scheduler
+from conference_scheduler import converter
 from ruamel.yaml import YAML
 from slugify import slugify
 
-from scheduler.decorators import uses_output_folders
 from scheduler import session
 
 logger = daiquiri.getLogger(__name__)
@@ -55,11 +55,15 @@ def import_proposals(resources):
 
 def import_solution():
     """Import a previously computed schedule from a .csv file"""
+    csv_file = Path(session.folders['solution'], 'schedule.csv')
+    logger.info(f'Importing schedule from {csv_file}')
     solution = []
-    with Path(session.folders['solution'], 'solution.csv').open('r') as file:
+    with Path(csv_file).open('r') as file:
         reader = csv.DictReader(file)
         for row in reader:
-            solution.append((row['event_index'], row['slot_index']))
+            solution.append((
+                int(row['event_index']),
+                int(row['slot_index'])))
         logger.debug(f'\nreources:\n{pformat(solution)}')
     return solution
 
@@ -67,13 +71,13 @@ def import_solution():
 def import_schedule_definition():
     """Import previously pickled schedule"""
     pickle_file = Path(session.folders['solution'], 'scheduler.pickle')
+    logger.info(
+        f'Importing resources, events, slots and schedule from {pickle_file}')
     with pickle_file.open('rb') as f:
         bundle = pickle.load(f)
-    logger.debug(f'\nbundle:\n{pformat(bundle)}')
     return bundle
 
 
-@uses_output_folders
 def pickle_solution_and_definition(resources, events, slots, solution):
     """Store the computed solution, the resources dict and the associated
     events and slots lists in pickle format"""
@@ -90,13 +94,12 @@ def pickle_solution_and_definition(resources, events, slots, solution):
         pickle.dump(bundle, f, pickle.HIGHEST_PROTOCOL)
 
 
-@uses_output_folders
 def export_schedule(solution, events, slots):
     """Write a human readable .csv file of the computed solution"""
     csv_file = Path(session.folders['solution'], 'schedule.csv')
     logger.info(f'Exporting schedule to {csv_file}')
 
-    schedule = scheduler.solution_to_schedule(solution, events, slots)
+    schedule = converter.solution_to_schedule(solution, events, slots)
     scheduled_items = [
         {
             'event_index': events.index(item.event),
@@ -114,11 +117,18 @@ def export_schedule(solution, events, slots):
             writer.writerow(item)
 
 
-@uses_output_folders
+def export_solution_and_definition(resources, events, slots, solution):
+    session.folders['solution'].mkdir(exist_ok=True)
+    pickle_solution_and_definition(resources, events, slots, solution)
+    export_schedule(solution, events, slots)
+
+
 def build_output(resources, events, slots, solution):
     """Create the yaml files required by the conference django-amber based
     website for display of the programme"""
     logger.info(f'Creating output files in {session.folders["build"]}...')
+    shutil.rmtree(session.folders['build'], ignore_errors=True)
+    session.folders['build'].mkdir()
 
     day_format = '%A %-d'
     slot_format = '%d-%b-%Y %H:%M'

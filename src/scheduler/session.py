@@ -8,5 +8,3 @@ this.folders = {
     'solution': Path(Path.cwd(), 'solution'),
     'build': Path(Path.cwd(), 'build')
 }
-
-this.output_folders_are_clean = False

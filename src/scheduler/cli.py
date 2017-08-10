@@ -62,15 +62,14 @@ def build(solver, input_dir, build_dir):
 
     if solution is not None:
         logger.debug(convert.schedule_to_text(solution, events, slots))
-        io.pickle_solution_and_definition(resources, events, slots, solution)
-        io.export_schedule(solution, events, slots)
+        io.export_solution_and_definition(resources, events, slots, solution)
         io.build_output(resources, events, slots, solution)
 
     elapsed_time = time.time() - start_time
     logger.info(f'Completed in {round(elapsed_time, 2)}s')
 
 
-@scheduler.command
+@scheduler.command()
 def validate():
     solution = io.import_solution()
     definition = io.import_schedule_definition()
