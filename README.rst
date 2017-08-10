@@ -1,19 +1,18 @@
-PyCon UK Scheduler
-==================
-A tool to produce the schedule for the
-`PyCon UK Conference <http://pyconuk.org>`_.
+Conference Scehduler Command Line Interface
+===========================================
+A command line tool to manage the schedule for a conference.
 
 Installation
 ============
 
 The library requires Python 3.6 or later. The simplest way to install is::
 
-    pip install pyconuk-scheduler
+    pip install conference-scheduler-cli
 
 To install from source code::
 
-    git clone https://github.com/PyConUK/PyConUKScheduler
-    cd PyConUKScheduler
+    git clone https://github.com/PyConUK/ConferenceScheduler-cli
+    cd ConferenceScheduler-cli
     python setup.py install
 
 Quick Start
