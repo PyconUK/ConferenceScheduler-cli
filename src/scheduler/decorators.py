@@ -2,7 +2,6 @@ import functools
 import time
 import daiquiri
 
-
 logger = daiquiri.getLogger(__name__)
 
 
