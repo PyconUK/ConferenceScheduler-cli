@@ -8,6 +8,7 @@ from conference_scheduler.validator import (
 import daiquiri
 
 import scheduler.calculate as calc
+from scheduler.decorators import timed
 import scheduler.define as defn
 from scheduler import convert, io, logging, session
 
@@ -36,9 +37,8 @@ def scheduler(verbosity):
     '--solution_dir', '-s', default=None, help='Directory for solution files')
 @click.option(
     '--build_dir', '-b', default=None, help='Directory for output yaml files')
+@timed
 def build(algorithm, input_dir, solution_dir, build_dir):
-    start_time = time.time()
-
     if input_dir:
         session.folders['input'] = Path(input_dir)
 
@@ -66,16 +66,12 @@ def build(algorithm, input_dir, solution_dir, build_dir):
         io.export_solution_and_definition(resources, events, slots, solution)
         io.build_output(resources, events, slots, solution)
 
-    elapsed_time = time.time() - start_time
-    logger.info(f'Completed in {round(elapsed_time, 2)}s')
-
 
 @scheduler.command()
 @click.option(
     '--solution_dir', '-s', default=None, help='Directory for solution files')
+@timed
 def validate(solution_dir):
-    start_time = time.time()
-
     if solution_dir:
         session.folders['solution'] = Path(solution_dir)
 
@@ -89,18 +85,14 @@ def validate(solution_dir):
                 solution, definition['events'], definition['slots']):
             logger.error(v)
 
-    elapsed_time = time.time() - start_time
-    logger.info(f'Completed in {round(elapsed_time, 2)}s')
-
 
 @scheduler.command()
 @click.option(
     '--solution_dir', '-s', default=None, help='Directory for solution files')
 @click.option(
     '--build_dir', '-b', default=None, help='Directory for output yaml files')
+@timed
 def rebuild(solution_dir, build_dir):
-    start_time = time.time()
-
     if solution_dir:
         session.folders['solution'] = Path(solution_dir)
 
@@ -122,6 +114,3 @@ def rebuild(solution_dir, build_dir):
         for v in solution_violations(
                 solution, definition['events'], definition['slots']):
             logger.error(v)
-
-    elapsed_time = time.time() - start_time
-    logger.info(f'Completed in {round(elapsed_time, 2)}s')
