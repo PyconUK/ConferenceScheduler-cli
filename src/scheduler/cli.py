@@ -71,9 +71,17 @@ def build(solver, input_dir, build_dir):
 
 @scheduler.command()
 def validate():
+    start_time = time.time()
+
     solution = io.import_solution()
     definition = io.import_schedule_definition()
+    logger.info('Validating schedule...')
     if is_valid_solution(solution, definition['events'], definition['slots']):
         logger.info('Imported solution is valid')
     else:
-        logger.error('Imported solution is invalid')
+        for v in solution_violations(
+                solution, definition['events'], definition['slots']):
+            logger.error(v)
+
+    elapsed_time = time.time() - start_time
+    logger.info(f'Completed in {round(elapsed_time, 2)}s')
