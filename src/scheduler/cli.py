@@ -26,7 +26,7 @@ def scheduler(verbosity):
 
 @scheduler.command()
 @click.option(
-    '--solver', '-s', default='pulp_cbc_cmd',
+    '--algorithm', '-a', default='pulp_cbc_cmd',
     type=click.Choice(
         ['pulp_cbc_cmd', 'glpk', 'hill_climber', 'simulated_annealing']),
     help='Solver algorithm')
@@ -36,7 +36,7 @@ def scheduler(verbosity):
     '--solution_dir', '-s', default=None, help='Directory for solution files')
 @click.option(
     '--build_dir', '-b', default=None, help='Directory for output yaml files')
-def build(solver, input_dir, solution_dir, build_dir):
+def build(algorithm, input_dir, solution_dir, build_dir):
     start_time = time.time()
 
     if input_dir:
@@ -59,7 +59,7 @@ def build(solver, input_dir, solution_dir, build_dir):
     defn.add_clashes_to_events(events, clashes)
     defn.add_unsuitability_to_events(events, slots, unsuitability)
 
-    solution = calc.solution(events, slots, solver)
+    solution = calc.solution(events, slots, algorithm)
 
     if solution is not None:
         logger.debug(convert.schedule_to_text(solution, events, slots))
