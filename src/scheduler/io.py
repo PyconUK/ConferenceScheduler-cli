@@ -103,15 +103,15 @@ def export_schedule(solution, events, slots):
     scheduled_items = [
         {
             'event_index': events.index(item.event),
-            'event': f'{item.event.name}',
             'slot_index': slots.index(item.slot),
+            'event': f'{item.event.name}',
             'slot': f'{item.slot.starts_at} {item.slot.venue}'
         }
         for item in schedule
     ]
     with csv_file.open('w') as f:
         writer = csv.DictWriter(
-            f, fieldnames=['event_index', 'event', 'slot_index', 'slot'])
+            f, fieldnames=['event_index', 'slot_index', 'event', 'slot'])
         writer.writeheader()
         for item in scheduled_items:
             writer.writerow(item)

@@ -1,6 +1,11 @@
 Changelog
 #########
 
+Unreleased
+----------
+* Minor Improvement: Order of columns in schedule.csv swapped to show index
+  numbers at lhs of file
+
 v0.3.1 (2017-08-10)
 -------------------
 * Bug Fix: Redundant export of schedule on rebuild removed
@@ -17,5 +22,4 @@ v0.2.0 (2017-08-10)
 
 v0.1.0 (2017-08-10)
 -------------------
-
 * Initial release
