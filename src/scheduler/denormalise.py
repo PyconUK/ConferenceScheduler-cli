@@ -36,7 +36,7 @@ def slots(event_types, venues, days, slot_times):
         for venue, day, slot_time in it.product(
             venues, days, slot_times[event_type])
         if (event_type in venues[venue]['suitable_for'] and
-            and day in venues[venue]['available'])]
+            day in venues[venue]['available'])]
 
 
 def events(events_definition):
