@@ -1,8 +1,10 @@
 Changelog
 #########
 
-Unreleased
-----------
+v0.4.0 (2017-08-14)
+-------------------
+* New Feature: Venue availability can be defined
+
 * Minor Improvement: Order of columns in schedule.csv swapped to show index
   numbers at lhs of file
 
