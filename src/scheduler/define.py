@@ -1,5 +1,6 @@
 """Functions and procedures to construct the definition of the conference
 in a form suitable for the scheduling enging."""
+from collections import Counter
 from pprint import pformat
 
 import daiquiri
@@ -25,8 +26,11 @@ def slots(resources):
         resources['event_types'], resources['venues'], resources['days'],
         slot_times)
     logger.debug(f'\nslots:\n{pformat(slots)}')
-    logger.info(f'{len(slots)} slots available')
-    return slots
+
+    event_types = Counter([item['event_type'] for item in slots])
+    for event_type, count in event_types.items():
+        logger.info(f'{count} {event_type} slots available')
+    return [item['slot'] for item in slots]
 
 
 def events(resources):
