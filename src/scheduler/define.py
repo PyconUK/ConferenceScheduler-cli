@@ -47,9 +47,9 @@ def unavailability(resources, slots):
 
 
 def clashes(resources):
-    clashes = dn.clashes(resources['events'], resources['clashes'])
+    clashes, count = dn.clashes(resources['events'], resources['clashes'])
     logger.debug(f'\nclashes:\n{clashes}')
-    logger.info(f'{len(clashes)} person(s) with clashes')
+    logger.info(f'{count} person(s) with clashes')
     return clashes
 
 

@@ -136,9 +136,11 @@ def clashes(events_definition, clashes_definition):
 
     # Add the self-clashing constraint to any existing entries where it is
     # missing
+    count = 0
     for person, clashing_people in clashes_definition.items():
         if person not in clashing_people:
             clashing_people.append(person)
+            count += 1
 
     return {
         events_definition.index(event): [
@@ -147,7 +149,7 @@ def clashes(events_definition, clashes_definition):
             if t['person'] == c and
             events_definition.index(event) != events_definition.index(t)]
         for person, clashing_people in clashes_definition.items()
-        for event in events_definition if event['person'] == person}
+        for event in events_definition if event['person'] == person}, count
 
 
 def unsuitability(types_and_slots, events_definition):
