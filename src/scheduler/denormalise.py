@@ -10,38 +10,40 @@ from conference_scheduler.resources import Event
 from conference_scheduler.resources import Slot
 
 
-def slot_times(event_types, session_times):
-    return {
-        event_type: [{
-            'starts_at': slot_time['starts_at'],
-            'duration': slot_time['duration'],
-            'session_name': session_name}
-            for session_name, slot_times in session_times[event_type].items()
-            for slot_time in slot_times]
-        for event_type in event_types}
+# def slot_times(event_types, session_times):
+    # return {
+        # event_type: [{
+            # 'starts_at': slot_time['starts_at'],
+            # 'duration': slot_time['duration'],
+            # 'session_name': session_name}
+            # for session_name, slot_times in session_times[event_type].items()
+            # for slot_time in slot_times]
+        # for event_type in event_types}
 
 
-def slots(event_types, venues, days, slot_times):
-    return [{
-        'event_type': event_type,
-        'slot': Slot(
-            venue=venue,
-            starts_at=(
-                datetime.combine(day, datetime.min.time()) +
-                timedelta(seconds=slot_time['starts_at'])
-            ).strftime('%d-%b-%Y %H:%M'),
-            duration=slot_time['duration'],
-            session=f"{day} {slot_time['session_name']}",
-            capacity=venues[venue]['capacity'])
-        }
-        for event_type in event_types
-        for venue, day, slot_time in it.product(
-            venues, days, slot_times[event_type])
-        if (event_type in venues[venue]['suitable_for'] and
-            day in venues[venue]['available'])]
+def types_and_slots(venues):
+    output = []
+    for venue in venues:
+        for day in venue:
+            for session in day:
+                for slot in session:
+                    event_type = slot['event_type']
+                    slot = Slot(
+                        venue=venue,
+                        starts_at=(
+                            datetime.combine(day, datetime.min.time()) +
+                            timedelta(seconds=slot['starts_at'])
+                        ).strftime('%d-%b-%Y %H:%M'),
+                        duration=slot['duration'],
+                        session=f'{day} {session}',
+                        capacity=slot['capacity'])
+                    output.append({
+                        'event_type': event_type,
+                        'slot': slot})
+    return output
 
 
-def events(events_definition):
+def types_and_events(events_definition):
     """
     Parameters
     ----------
@@ -148,7 +150,7 @@ def clashes(events_definition, clashes_definition):
         for event in events_definition if event['person'] == person}
 
 
-def unsuitability(venues, slots, events_definition):
+def unsuitability(types_and_slots, events_definition):
     """
     Parameters
     ----------
@@ -168,16 +170,25 @@ def unsuitability(venues, slots, events_definition):
         for which it must not scheduled. The slots are represented by their
         index in the slots list.
     """
-    unsuitability =  {
-        events_definition.index(event): [
-            slots.index(slot)
-            for slot in slots
-            if event['event_type'] not in venues[slot.venue]['suitable_for']
-        ]
-        for event in events_definition
-    }
-    return {
-        event: unsuitable_slots
-        for event, unsuitable_slots in unsuitability.items()
-        if unsuitable_slots
-    }
+    # unsuitability =  {
+        # events_definition.index(event): [
+            # slots.index(slot)
+            # for slot in slots
+            # if event['event_type'] not in venues[slot.venue]['suitable_for']
+        # ]
+        # for event in events_definition
+    # }
+    output = {}
+    for event in events_definition:
+        unsuitable_slots = [
+                types_and_slots.index({"event_type": slot_type,
+                                       "slot": slot})
+                for slot_type, slot in types_and_slots.items()
+                if slot_type != event['event_type']]
+        output[events_definition.index(event)] = unsuitable_slots
+    return output
+    # return {
+        # event:
+        # for event, unsuitable_slots in unsuitability.items()
+        # if unsuitable_slots
+    # }
