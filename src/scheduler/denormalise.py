@@ -172,23 +172,10 @@ def unsuitability(types_and_slots, events_definition):
         for which it must not scheduled. The slots are represented by their
         index in the slots list.
     """
-    # unsuitability =  {
-        # events_definition.index(event): [
-            # slots.index(slot)
-            # for slot in slots
-            # if event['event_type'] not in venues[slot.venue]['suitable_for']
-        # ]
-        # for event in events_definition
-    # }
     output = {}
     for event in events_definition:
         unsuitable_slots = [
-                i for i, dictionary in enumerate(types_and_slots)
-                if dictionary['event_type'] != event['event_type']]
+            i for i, dictionary in enumerate(types_and_slots)
+            if dictionary['event_type'] != event['event_type']]
         output[events_definition.index(event)] = unsuitable_slots
     return output
-    # return {
-        # event:
-        # for event, unsuitable_slots in unsuitability.items()
-        # if unsuitable_slots
-    # }
