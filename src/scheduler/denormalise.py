@@ -56,10 +56,12 @@ def events(events_definition):
     list
         of Event instances
     """
-    return [
-        Event(
+    return [{
+        'event_type': event['event_type'],
+        'event': Event(
             event['title'], event['duration'], demand=None,
             tags=event['tags'])
+        }
         for event in events_definition]
 
 

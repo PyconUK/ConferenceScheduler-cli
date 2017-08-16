@@ -167,7 +167,7 @@ def test_slots(event_types, venues, days, slot_times):
 
 def test_events(event_types, events_definition):
     events = dn.events(events_definition)
-    assert all(isinstance(event, Event)for event in events)
+    assert all(isinstance(item['event'], Event)for item in events)
     assert len(events) == 6
 
 
