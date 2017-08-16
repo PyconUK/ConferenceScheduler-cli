@@ -1,6 +1,10 @@
 Changelog
 #########
 
+v0.4.1 (2017-08-14)
+-------------------
+* Improved logging with counts of events and slots by event type
+
 v0.4.0 (2017-08-14)
 -------------------
 * New Feature: Venue availability can be defined
