@@ -36,8 +36,11 @@ def slots(resources):
 def events(resources):
     events = dn.events(resources['events'])
     logger.debug(f'\nevents:\n{pformat(events)}')
-    logger.info(f'{len(events)} events to schedule')
-    return events
+
+    event_types = Counter([item['event_type'] for item in events])
+    for event_type, count in event_types.items():
+        logger.info(f'{count} {event_type} events to schedule')
+    return [item['event'] for item in events]
 
 
 def unavailability(resources, slots):
