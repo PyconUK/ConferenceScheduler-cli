@@ -1,7 +1,7 @@
 Changelog
 #########
 
-v0.4.1 (2017-08-14)
+v0.4.1 (2017-08-16)
 -------------------
 * Improved logging with counts of events and slots by event type
 
