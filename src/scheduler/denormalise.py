@@ -23,10 +23,10 @@ from conference_scheduler.resources import Slot
 
 def types_and_slots(venues):
     output = []
-    for venue in venues:
-        for day in venue:
-            for session in day:
-                for slot in session:
+    for venue, days in venues.items():
+        for day, sessions in days.items():
+            for session, slots in sessions.items():
+                for slot in slots:
                     event_type = slot['event_type']
                     slot = Slot(
                         venue=venue,
@@ -181,10 +181,8 @@ def unsuitability(types_and_slots, events_definition):
     output = {}
     for event in events_definition:
         unsuitable_slots = [
-                types_and_slots.index({"event_type": slot_type,
-                                       "slot": slot})
-                for slot_type, slot in types_and_slots.items()
-                if slot_type != event['event_type']]
+                i for i, dictionary in enumerate(types_and_slots)
+                if dictionary['event_type'] != event['event_type']]
         output[events_definition.index(event)] = unsuitable_slots
     return output
     # return {

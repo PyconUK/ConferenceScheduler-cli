@@ -18,23 +18,18 @@ def resources():
 
 
 def slots(resources):
-    slot_times = dn.slot_times(
-        resources['event_types'], resources['session_times'])
-    logger.debug(f'\nslot times:\n{pformat(slot_times)}')
 
-    slots = dn.slots(
-        resources['event_types'], resources['venues'], resources['days'],
-        slot_times)
-    logger.debug(f'\nslots:\n{pformat(slots)}')
+    types_and_slots = dn.types_and_slots(resources['venues'])
+    logger.debug(f'\ntypes_and_slots:\n{pformat(types_and_slots)}')
 
-    event_types = Counter([item['event_type'] for item in slots])
+    event_types = Counter([item['event_type'] for item in types_and_slots])
     for event_type, count in event_types.items():
         logger.info(f'{count} {event_type} slots available')
-    return [item['slot'] for item in slots]
+    return [item['slot'] for item in types_and_slots]
 
 
 def events(resources):
-    events = dn.events(resources['events'])
+    events = dn.types_and_events(resources['events'])
     logger.debug(f'\nevents:\n{pformat(events)}')
 
     event_types = Counter([item['event_type'] for item in events])
@@ -59,8 +54,10 @@ def clashes(resources):
 
 
 def unsuitability(resources, slots):
-    unsuitability = dn.unsuitability(
-        resources['venues'], slots, resources['events'])
+
+    types_and_slots = dn.types_and_slots(resources['venues'])
+
+    unsuitability = dn.unsuitability(types_and_slots, resources['events'])
     logger.debug(f'\nunsuitability:\n{unsuitability}')
     logger.info(f'{len(unsuitability)} events with unsuitable venues')
     return unsuitability
