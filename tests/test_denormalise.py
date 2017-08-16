@@ -161,7 +161,7 @@ def test_slot_times(event_types, session_times, slot_times):
 
 def test_slots(event_types, venues, days, slot_times):
     slots = dn.slots(event_types, venues, days, slot_times)
-    assert all(isinstance(slot, Slot) for slot in slots)
+    assert all(isinstance(item['slot'], Slot) for item in slots)
     assert len(slots) == 72
 
 
@@ -175,7 +175,8 @@ def test_unavailability(
     event_types, events_definition, venues, days, slot_times,
     unavailability_defintion
 ):
-    slots = dn.slots(event_types, venues, days, slot_times)
+    slots = [item['slot']
+             for item in dn.slots(event_types, venues, days, slot_times)]
     unavailability = dn.unavailability(
         events_definition, slots, unavailability_defintion)
     print(unavailability)
@@ -190,6 +191,7 @@ def test_clashes(events_definition, clashes_definition):
 def test_unsuitability(
     venues, event_types, days, slot_times, events_definition
 ):
-    slots = dn.slots(event_types, venues, days, slot_times)
+    slots = [item['slot']
+             for item in dn.slots(event_types, venues, days, slot_times)]
     unsuitability = dn.unsuitability(venues, slots, events_definition)
     assert list(unsuitability.keys()) == list(range(6))

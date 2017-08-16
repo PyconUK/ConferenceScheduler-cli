@@ -22,16 +22,18 @@ def slot_times(event_types, session_times):
 
 
 def slots(event_types, venues, days, slot_times):
-    return [
-        Slot(
+    return [{
+        'event_type': event_type,
+        'slot': Slot(
             venue=venue,
             starts_at=(
-                datetime.combine(day, datetime.min.time())
-                + timedelta(seconds=slot_time['starts_at'])
+                datetime.combine(day, datetime.min.time()) +
+                timedelta(seconds=slot_time['starts_at'])
             ).strftime('%d-%b-%Y %H:%M'),
             duration=slot_time['duration'],
             session=f"{day} {slot_time['session_name']}",
             capacity=venues[venue]['capacity'])
+        }
         for event_type in event_types
         for venue, day, slot_time in it.product(
             venues, days, slot_times[event_type])
