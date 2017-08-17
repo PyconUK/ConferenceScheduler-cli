@@ -10,22 +10,24 @@ from conference_scheduler.resources import Slot
 
 
 def types_and_slots(venues):
-    return [{
-        'event_type': slot['event_type'],
-        'slot': Slot(
-            venue=venue,
-            starts_at=(
-                datetime.combine(day, datetime.min.time()) +
-                timedelta(seconds=slot['starts_at'])
-            ).strftime('%d-%b-%Y %H:%M'),
-            duration=slot['duration'],
-            session=f'{day} {session}',
-            capacity=slot['capacity'])
+    return [
+        {
+            'event_type': slot['event_type'],
+            'slot': Slot(
+                venue=venue,
+                starts_at=(
+                    datetime.combine(day, datetime.min.time()) +
+                    timedelta(seconds=slot['starts_at'])
+                ).strftime('%d-%b-%Y %H:%M'),
+                duration=slot['duration'],
+                session=f'{day} {session}',
+                capacity=slot['capacity'])
         }
         for venue, days in venues.items()
         for day, sessions in days.items()
         for session, slots in sessions.items()
-        for slot in slots]
+        for slot in slots
+    ]
 
 
 def types_and_events(events_definition):
@@ -43,12 +45,14 @@ def types_and_events(events_definition):
     list
         of Event instances
     """
-    return [{
-        'event_type': event['event_type'],
-        'event': Event(
-            event['title'], event['duration'], demand=None,
-            tags=event['tags'])}
-    for event in events_definition]
+    return [
+        {
+            'event_type': event['event_type'],
+            'event': Event(
+                event['title'], event['duration'], demand=None,
+                tags=event['tags'])
+        }
+        for event in events_definition]
 
 
 def unavailability(events_definition, slots, unavailability_definition):
