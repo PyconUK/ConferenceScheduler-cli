@@ -39,15 +39,11 @@ def import_proposals(resources):
         for row in reader:
             if row['Session type'] in resources['event_types']:
                 event_type = row['Session type']
-                if event_type == 'workshop':
-                    duration = 60
-                else:
-                    duration = 30
                 proposals.append({
                     'title': row['Title'],
-                    'duration': duration,
+                    'duration': int(row['Duration']),
                     'person': slugify(row['Name']),
-                    'tags': [],
+                    'tags': [row['Tag']], # Currently only a single tag is allowed
                     'event_type': event_type})
     logger.debug(f'\nreources:\n{pformat(proposals)}')
     return proposals
