@@ -11,7 +11,6 @@ solvers = {
     'pulp_cbc_cmd': {
         'function': scheduler.solution,
         'kwargs': {
-            'objective_function': None,
             'solver': PULP_CBC_CMD(msg=False)}},
     'glpk': {
         'function': scheduler.solution,
@@ -20,12 +19,10 @@ solvers = {
     'hill_climber': {
         'function': scheduler.heuristic,
         'kwargs': {
-            'objective_function': None,
             'algorithm': hill_climber}},
     'simulated_annealing': {
         'function': scheduler.heuristic,
         'kwargs': {
-            'objective_function': None,
             'algorithm': simulated_annealing}}}
 
 
