@@ -31,48 +31,6 @@ def scheduler(verbosity):
         ['pulp_cbc_cmd', 'glpk', 'hill_climber', 'simulated_annealing']),
     help='Solver algorithm')
 @click.option(
-    '--input_dir', '-i', default=None, help='Directory for input files')
-@click.option(
-    '--solution_dir', '-s', default=None, help='Directory for solution files')
-@click.option(
-    '--build_dir', '-b', default=None, help='Directory for output yaml files')
-@timed
-def build(algorithm, input_dir, solution_dir, build_dir):
-    if input_dir:
-        session.folders['input'] = Path(input_dir)
-
-    if solution_dir:
-        session.folders['solution'] = Path(solution_dir)
-
-    if build_dir:
-        session.folders['build'] = Path(build_dir)
-
-    resources = defn.resources()
-    slots = defn.slots(resources)
-    events = defn.events(resources)
-    unavailability = defn.unavailability(resources, slots)
-    clashes = defn.clashes(resources)
-    unsuitability = defn.unsuitability(resources, slots)
-
-    defn.add_unavailability_to_events(events, slots, unavailability)
-    defn.add_clashes_to_events(events, clashes)
-    defn.add_unsuitability_to_events(events, slots, unsuitability)
-
-    solution = calc.solution(events, slots, algorithm)
-
-    if solution is not None:
-        logger.debug(convert.schedule_to_text(solution, events, slots))
-        io.export_solution_and_definition(resources, events, slots, solution)
-        io.build_output(resources, events, slots, solution)
-
-
-@scheduler.command()
-@click.option(
-    '--algorithm', '-a', default='pulp_cbc_cmd',
-    type=click.Choice(
-        ['pulp_cbc_cmd', 'glpk', 'hill_climber', 'simulated_annealing']),
-    help='Solver algorithm')
-@click.option(
     '--objective', '-o', default=None,
     type=click.Choice(['capacity', 'changes']),
     help='Objective Function')
@@ -83,7 +41,7 @@ def build(algorithm, input_dir, solution_dir, build_dir):
 @click.option(
     '--build_dir', '-b', default=None, help='Directory for output yaml files')
 @timed
-def reschedule(algorithm, objective, input_dir, solution_dir, build_dir):
+def build(algorithm, objective, input_dir, solution_dir, build_dir):
     if input_dir:
         session.folders['input'] = Path(input_dir)
 
@@ -104,8 +62,11 @@ def reschedule(algorithm, objective, input_dir, solution_dir, build_dir):
     defn.add_clashes_to_events(events, clashes)
     defn.add_unsuitability_to_events(events, slots, unsuitability)
 
-    original_solution = io.import_solution()
-    solution = calc.solution(events, slots, algorithm)
+    kwargs = {}
+    if objective == 'changes':
+        kwargs['original_solution'] = io.import_solution()
+
+    solution = calc.solution(events, slots, algorithm, objective, **kwargs)
 
     if solution is not None:
         logger.debug(convert.schedule_to_text(solution, events, slots))

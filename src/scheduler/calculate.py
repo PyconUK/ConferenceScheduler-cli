@@ -32,7 +32,7 @@ objectives = {
     'demand': number_of_changes}
 
 
-def solution(events, slots, solver, **kwargs):
+def solution(events, slots, solver, objective=None, **kwargs):
     logger.info(f'Scheduling conference using {solver} solver....')
 
     common_kwargs = {
@@ -40,7 +40,13 @@ def solution(events, slots, solver, **kwargs):
         'slots': slots,
     }
 
-    full_kwargs = {**common_kwargs, **solvers[solver]['kwargs'], **kwargs}
+    objective_function = objectives.get(objective, None)
+
+    full_kwargs = {
+        **common_kwargs,
+        **solvers[solver]['kwargs'],
+        'objective_function': objective_function,
+        **kwargs}
 
     try:
         solution = solvers[solver]['function'](**full_kwargs)
