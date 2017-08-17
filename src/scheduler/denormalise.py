@@ -20,7 +20,8 @@ def types_and_slots(venues):
             ).strftime('%d-%b-%Y %H:%M'),
             duration=slot['duration'],
             session=f'{day} {session}',
-            capacity=slot['capacity'])}
+            capacity=slot['capacity'])
+        }
         for venue, days in venues.items()
         for day, sessions in days.items()
         for session, slots in sessions.items()
@@ -77,13 +78,17 @@ def unavailability(events_definition, slots, unavailability_definition):
         for which it must not scheduled. The slots are represented by their
         index in the slots list.
     """
+    def to_datetime(datetime_as_string):
+        return datetime.strptime(datetime_as_string, '%d-%b-%Y %H:%M')
+
     return {
         events_definition.index(event): [
             slots.index(slot)
             for period in periods
             for slot in slots
-            if period['unavailable_from'] <= datetime.strptime(slot.starts_at, '%d-%b-%Y %H:%M') and
-            period['unavailable_until'] >= datetime.strptime(slot.starts_at, '%d-%b-%Y %H:%M') + timedelta(0, slot.duration * 60)
+            if period['unavailable_from'] <= to_datetime(slot.starts_at) and
+            period['unavailable_until'] >= (
+                to_datetime(slot.starts_at) + timedelta(0, slot.duration * 60))
         ]
         for person, periods in unavailability_definition.items()
         for event in events_definition if event['person'] == person
