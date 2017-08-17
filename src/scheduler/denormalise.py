@@ -2,23 +2,11 @@
 the input yaml files into the flattened structures required by the conference
 scheduler computation engine."""
 
-import itertools as it
 from datetime import datetime
 from datetime import timedelta
 
 from conference_scheduler.resources import Event
 from conference_scheduler.resources import Slot
-
-
-# def slot_times(event_types, session_times):
-    # return {
-        # event_type: [{
-            # 'starts_at': slot_time['starts_at'],
-            # 'duration': slot_time['duration'],
-            # 'session_name': session_name}
-            # for session_name, slot_times in session_times[event_type].items()
-            # for slot_time in slot_times]
-        # for event_type in event_types}
 
 
 def types_and_slots(venues):
