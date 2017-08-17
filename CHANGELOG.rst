@@ -1,6 +1,12 @@
 Changelog
 #########
 
+v0.5.0 (2017-08-17)
+-------------------
+* Breaking Change: content previously in separate yaml files now in venues.yaml
+
+* New Feature: objective function argument added to build command
+
 v0.4.1 (2017-08-16)
 -------------------
 * Improved logging with counts of events and slots by event type
