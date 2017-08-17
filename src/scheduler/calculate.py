@@ -35,17 +35,12 @@ objectives = {
 def solution(events, slots, solver, objective=None, **kwargs):
     logger.info(f'Scheduling conference using {solver} solver....')
 
-    common_kwargs = {
+    objective_function = objectives.get(objective, None)
+    full_kwargs = {
         'events': events,
         'slots': slots,
-    }
-
-    objective_function = objectives.get(objective, None)
-
-    full_kwargs = {
-        **common_kwargs,
-        **solvers[solver]['kwargs'],
         'objective_function': objective_function,
+        **solvers[solver]['kwargs'],
         **kwargs}
 
     try:
