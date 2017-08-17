@@ -10,25 +10,21 @@ from conference_scheduler.resources import Slot
 
 
 def types_and_slots(venues):
-    output = []
-    for venue, days in venues.items():
-        for day, sessions in days.items():
-            for session, slots in sessions.items():
-                for slot in slots:
-                    event_type = slot['event_type']
-                    slot = Slot(
-                        venue=venue,
-                        starts_at=(
-                            datetime.combine(day, datetime.min.time()) +
-                            timedelta(seconds=slot['starts_at'])
-                        ).strftime('%d-%b-%Y %H:%M'),
-                        duration=slot['duration'],
-                        session=f'{day} {session}',
-                        capacity=slot['capacity'])
-                    output.append({
-                        'event_type': event_type,
-                        'slot': slot})
-    return output
+    return [{
+        'event_type': slot['event_type'],
+        'slot': Slot(
+            venue=venue,
+            starts_at=(
+                datetime.combine(day, datetime.min.time()) +
+                timedelta(seconds=slot['starts_at'])
+            ).strftime('%d-%b-%Y %H:%M'),
+            duration=slot['duration'],
+            session=f'{day} {session}',
+            capacity=slot['capacity'])}
+        for venue, days in venues.items()
+        for day, sessions in days.items()
+        for session, slots in sessions.items()
+        for slot in slots]
 
 
 def types_and_events(events_definition):
@@ -50,9 +46,8 @@ def types_and_events(events_definition):
         'event_type': event['event_type'],
         'event': Event(
             event['title'], event['duration'], demand=None,
-            tags=event['tags'])
-        }
-        for event in events_definition]
+            tags=event['tags'])}
+    for event in events_definition]
 
 
 def unavailability(events_definition, slots, unavailability_definition):
@@ -130,14 +125,16 @@ def clashes(events_definition, clashes_definition):
             clashing_people.append(person)
             count += 1
 
-    return {
+    clashes = {
         events_definition.index(event): [
             events_definition.index(t) for c in clashing_people
             for t in events_definition
             if t['person'] == c and
             events_definition.index(event) != events_definition.index(t)]
         for person, clashing_people in clashes_definition.items()
-        for event in events_definition if event['person'] == person}, count
+        for event in events_definition if event['person'] == person
+    }
+    return clashes, count
 
 
 def unsuitability(types_and_slots, events_definition):
