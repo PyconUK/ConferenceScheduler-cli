@@ -36,7 +36,7 @@ def solution(events, slots, solver, objective=None, **kwargs):
     message = f'Scheduling conference using {solver} solver'
     if objective is not None:
         message += f' and optimising for {objective}'
-    logger.info(message + '...')
+    logger.info(f'{message}...')
 
     objective_function = objectives.get(objective, None)
     full_kwargs = {
