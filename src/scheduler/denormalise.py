@@ -191,9 +191,9 @@ def unsuitability(types_and_slots, events_definition):
         index in the slots list.
     """
     output = {}
-    for event in events_definition:
+    for i, event in enumerate(events_definition):
         unsuitable_slots = [
             i for i, dictionary in enumerate(types_and_slots)
             if dictionary['event_type'] != event['event_type']]
-        output[events_definition.index(event)] = unsuitable_slots
+        output[i] = unsuitable_slots
     return output
