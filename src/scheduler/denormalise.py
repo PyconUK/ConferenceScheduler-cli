@@ -10,6 +10,28 @@ from conference_scheduler.resources import Slot
 
 
 def types_and_slots(venues):
+    """
+    Parameters
+    ----------
+    venues : dict
+        of the form
+            {
+                <venue name>: {
+                    <datetime of a day>: {
+                        <session name>: {
+                            'starts_at': <seconds after midnight>,
+                            'duration': <minutes>,
+                            'event_type': <event type>,
+                            'capacity': <capacity
+                        }
+                    }
+                }
+            }
+    Returns
+    -------
+    list
+        of dicts mapping an event type to a Slot instance
+    """
     return [
         {
             'event_type': slot['event_type'],
@@ -43,7 +65,7 @@ def types_and_events(events_definition):
     Returns
     -------
     list
-        of Event instances
+        of dicts mapping an event type to an Event instance
     """
     return [
         {
@@ -119,6 +141,8 @@ def clashes(events_definition, clashes_definition):
     dict
         mapping the index of an event in the events list to a list of event
         indexes against which it must not be scheduled.
+    integer
+        the count of self-clashes added
     """
     # Add everyone who is missing to the clashes definition so that they cannot
     # clash with themselves
@@ -150,8 +174,8 @@ def unsuitability(types_and_slots, events_definition):
     """
     Parameters
     ----------
-    venues : dict
-        mapping a venue name to a dict of further parameters
+    types_and_slots : list
+        of dicts mapping an event type to a Slot instance
     events_definition : list
         of dicts of the form
             {'title': Event title,
