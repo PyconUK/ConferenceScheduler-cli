@@ -2,6 +2,8 @@ import daiquiri
 from conference_scheduler import scheduler
 from conference_scheduler.heuristics import hill_climber
 from conference_scheduler.heuristics import simulated_annealing
+from conference_scheduler.lp_problem.objective_functions import (
+    capacity_demand_difference, number_of_changes)
 from pulp import GLPK
 from pulp import PULP_CBC_CMD
 
@@ -25,8 +27,12 @@ solvers = {
         'kwargs': {
             'algorithm': simulated_annealing}}}
 
+objectives = {
+    'capacity': capacity_demand_difference,
+    'demand': number_of_changes}
 
-def solution(events, slots, solver):
+
+def solution(events, slots, solver, **kwargs):
     logger.info(f'Scheduling conference using {solver} solver....')
 
     common_kwargs = {
@@ -34,10 +40,10 @@ def solution(events, slots, solver):
         'slots': slots,
     }
 
-    kwargs = {**common_kwargs, **solvers[solver]['kwargs']}
+    full_kwargs = {**common_kwargs, **solvers[solver]['kwargs'], **kwargs}
 
     try:
-        solution = solvers[solver]['function'](**kwargs)
+        solution = solvers[solver]['function'](**full_kwargs)
     except ValueError:
         logger.error('No valid solution found')
         solution = None
