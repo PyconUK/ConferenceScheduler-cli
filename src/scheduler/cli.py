@@ -1,5 +1,4 @@
 """Procedures to define the Command Line Interface (cli)"""
-import time
 from pathlib import Path
 
 import click
