@@ -19,7 +19,7 @@ def resources():
 
 def slots(resources):
 
-    types_and_slots = dn.types_and_slots(resources['venues'])
+    types_and_slots = dn.types_and_slots(resources['timetable'])
     logger.debug(f'\ntypes_and_slots:\n{pformat(types_and_slots)}')
 
     event_types = Counter([item['event_type'] for item in types_and_slots])
@@ -55,11 +55,11 @@ def clashes(resources):
 
 def unsuitability(resources, slots):
 
-    types_and_slots = dn.types_and_slots(resources['venues'])
+    types_and_slots = dn.types_and_slots(resources['timetable'])
 
     unsuitability = dn.unsuitability(types_and_slots, resources['events'])
     logger.debug(f'\nunsuitability:\n{unsuitability}')
-    logger.info(f'{len(unsuitability)} events with unsuitable venues')
+    logger.info(f'{len(unsuitability)} events with unsuitable timetable')
     return unsuitability
 
 

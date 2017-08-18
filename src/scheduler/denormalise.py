@@ -9,11 +9,11 @@ from conference_scheduler.resources import Event
 from conference_scheduler.resources import Slot
 
 
-def types_and_slots(venues):
+def types_and_slots(timetable):
     """
     Parameters
     ----------
-    venues : dict
+    timetable : dict
         of the form
             {
                 <venue name>: {
@@ -41,11 +41,11 @@ def types_and_slots(venues):
                     datetime.combine(day, datetime.min.time()) +
                     timedelta(seconds=slot['starts_at'])
                 ).strftime('%d-%b-%Y %H:%M'),
-                duration=slot['duration'],
+                duration=slot.get('duration', 0),
                 session=f'{day} {session}',
-                capacity=slot['capacity'])
+                capacity=slot.get('capacity', 0))
         }
-        for venue, days in venues.items()
+        for venue, days in timetable.items()
         for day, sessions in days.items()
         for session, slots in sessions.items()
         for slot in slots
