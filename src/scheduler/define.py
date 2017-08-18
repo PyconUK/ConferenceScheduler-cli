@@ -63,6 +63,13 @@ def unsuitability(resources, slots):
     return unsuitability
 
 
+def allocations(resources):
+    allocations = dn.allocations(resources['allocations'])
+    logger.debug(f'\nallocations\n{allocations}')
+    logger.info(f'{len(allocations)} pre-allocated event(s)')
+    return allocations
+
+
 def add_unavailability_to_events(events, slots, unavailability):
     for event, unavailable_slots in unavailability.items():
         events[event].add_unavailability(
@@ -87,3 +94,15 @@ def add_unsuitability_to_events(events, slots, unsuitability):
     logger.info(
         f'Added unavailability for {len(unsuitability)} event(s) due to '
         'venue suitability.')
+
+
+def add_allocations(events, slots, solution, allocations):
+    for allocation in allocations:
+        events.append(allocation['event'])
+
+    for allocation in allocations:
+        event_idx = events.index(allocation['event'])
+        slot_idx = slots.index(allocation['slot'])
+        solution.append((event_idx, slot_idx))
+
+    logger.info(f'Added {len(allocations)} pre-allocated event(s) to solution')

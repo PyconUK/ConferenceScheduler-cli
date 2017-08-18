@@ -115,6 +115,25 @@ def clashes_definition():
     }
 
 
+@pytest.fixture
+def allocations_definition():
+    return [
+        {'Another talk': {
+            'person': 'charlie',
+            'tags': None,
+            'venue': 'Assembly Room',
+            'day': datetime(2017, 10, 26, 0, 0),
+            'session': 'afternoon',
+            'starts_at': 54000}},
+        {'Another workshop': {
+            'person': 'diane',
+            'tags': None,
+            'venue': 'Room C',
+            'day': datetime(2017, 10, 26, 0, 0),
+            'session': 'afternoon',
+            'starts_at': 54000}}]
+
+
 def test_types_and_slots(event_types, venues):
     types_and_slots = dn.types_and_slots(venues)
     assert all(isinstance(item['slot'], Slot) for item in types_and_slots)
@@ -147,3 +166,11 @@ def test_unsuitability(venues, events_definition):
     types_and_slots = dn.types_and_slots(venues)
     unsuitability = dn.unsuitability(types_and_slots, events_definition)
     assert list(unsuitability.keys()) == list(range(6))
+
+
+def test_allocations(allocations_definition):
+    allocations = dn.allocations(allocations_definition)
+    assert len(allocations) == len(allocations_definition)
+    assert all(isinstance(item['event'], Event) for item in allocations)
+    assert all(isinstance(item['slot'], Slot) for item in allocations)
+

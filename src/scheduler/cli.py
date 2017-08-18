@@ -57,6 +57,7 @@ def build(algorithm, objective, input_dir, solution_dir, build_dir):
     unavailability = defn.unavailability(resources, slots)
     clashes = defn.clashes(resources)
     unsuitability = defn.unsuitability(resources, slots)
+    allocations = defn.allocations(resources)
 
     defn.add_unavailability_to_events(events, slots, unavailability)
     defn.add_clashes_to_events(events, clashes)
@@ -69,6 +70,7 @@ def build(algorithm, objective, input_dir, solution_dir, build_dir):
     solution = calc.solution(events, slots, algorithm, objective, **kwargs)
 
     if solution is not None:
+        defn.add_allocations(events, slots, solution, allocations)
         logger.debug(convert.schedule_to_text(solution, events, slots))
         io.export_solution_and_definition(resources, events, slots, solution)
         io.build_output(resources, events, slots, solution)

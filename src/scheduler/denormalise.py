@@ -197,3 +197,29 @@ def unsuitability(types_and_slots, events_definition):
             if dictionary['event_type'] != event['event_type']]
         output[i] = unsuitable_slots
     return output
+
+
+def allocations(allocations_definition):
+    try:
+        return [
+            {
+                'event': Event(
+                    name=event,
+                    duration=0,
+                    demand=None,
+                    tags=details['tags']),
+                'slot': Slot(
+                    venue=details['venue'],
+                    starts_at=(datetime.combine(
+                        details['day'],
+                        datetime.min.time()) +
+                        timedelta(seconds=details['starts_at'])
+                    ).strftime('%d-%b-%Y %H:%M'),
+                    duration=0,
+                    session=(f'{details["day"]} {details["session"]}'),
+                    capacity=0)
+            }
+            for allocation in allocations_definition
+            for event, details in allocation.items()]
+    except TypeError:
+        return []
