@@ -1,6 +1,12 @@
 Changelog
 #########
 
+v0.6.0 (2017-08-18)
+-------------------
+* New Feature: Pre-allocated events can be defined in allocations.yaml
+
+* Breaking Change: venues.yml renamed to timetable.yml
+
 v0.5.0 (2017-08-17)
 -------------------
 * Breaking Change: content previously in separate yaml files now in venues.yaml
