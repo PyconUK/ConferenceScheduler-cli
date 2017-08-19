@@ -29,7 +29,7 @@ solvers = {
 
 objectives = {
     'capacity': capacity_demand_difference,
-    'demand': number_of_changes}
+    'consistency': number_of_changes}
 
 
 def solution(events, slots, solver, objective=None, **kwargs):
