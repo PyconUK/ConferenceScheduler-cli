@@ -64,7 +64,7 @@ def build(algorithm, objective, input_dir, solution_dir, build_dir):
     defn.add_unsuitability_to_events(events, slots, unsuitability)
 
     kwargs = {}
-    if objective == 'changes':
+    if objective == 'consistency':
         kwargs['original_solution'] = io.import_solution()
 
     solution = calc.solution(events, slots, algorithm, objective, **kwargs)
