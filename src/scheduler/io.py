@@ -99,8 +99,8 @@ def export_schedule(solution, events, slots):
     scheduled_items = [
         {
             'event_index': events.index(item.event),
-            'slot_index': slots.index(item.slot),
             'event': f'{item.event.name}',
+            'slot_index': slots.index(item.slot),
             'slot': f'{item.slot.starts_at} {item.slot.venue}'
         }
         for item in schedule
