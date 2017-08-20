@@ -1,6 +1,10 @@
 Changelog
 #########
 
+v0.7.0 (2017-08-20)
+-------------------
+* New feature: Capacity objective now split into efficiency or equity
+
 v0.6.0 (2017-08-18)
 -------------------
 * New Feature: Pre-allocated events can be defined in allocations.yaml
