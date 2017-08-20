@@ -32,7 +32,7 @@ def scheduler(verbosity):
     help='Solver algorithm')
 @click.option(
     '--objective', '-o', default=None,
-    type=click.Choice(['capacity', 'consistency']),
+    type=click.Choice(['efficiency', 'equity', 'consistency']),
     help='Objective Function')
 @click.option(
     '--input_dir', '-i', default=None, help='Directory for input files')
