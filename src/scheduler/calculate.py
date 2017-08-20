@@ -3,7 +3,9 @@ from conference_scheduler import scheduler
 from conference_scheduler.heuristics import hill_climber
 from conference_scheduler.heuristics import simulated_annealing
 from conference_scheduler.lp_problem.objective_functions import (
-    capacity_demand_difference, number_of_changes)
+    efficiency_capacity_demand_difference,
+    equity_capacity_demand_difference,
+    number_of_changes)
 from pulp import GLPK
 from pulp import PULP_CBC_CMD
 
@@ -28,7 +30,8 @@ solvers = {
             'algorithm': simulated_annealing}}}
 
 objectives = {
-    'capacity': capacity_demand_difference,
+    'efficiency': efficiency_capacity_demand_difference,
+    'equity': equity_capacity_demand_difference,
     'consistency': number_of_changes}
 
 

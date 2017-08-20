@@ -42,8 +42,9 @@ def import_proposals(resources):
                 proposals.append({
                     'title': row['title'],
                     'duration': int(row['duration']),
+                    'demand': float(row.get('demand', 0)),
                     'person': slugify(row['name']),
-                    'tags': [row['tag']], # Currently only a single tag is allowed
+                    'tags': [row['tag']] if row['tag'] != '' else [],
                     'event_type': event_type})
     logger.debug(f'\nreources:\n{pformat(proposals)}')
     return proposals
@@ -142,7 +143,7 @@ def build_output(resources, events, slots, solution):
             'room': venue,
             'date': day,
             'time': start_time,
-            'title': events[item[0]].name
+            'title': events[item[0]].name,
         }
 
         folder = Path(session.folders['build'], day, venue)
