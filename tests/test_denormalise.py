@@ -105,11 +105,21 @@ def events_definition():
 
 
 @pytest.fixture
-def unavailability_defintion():
+def people_unavailability_defintion():
     return {
         'owen-campbell': [{
             'unavailable_from': datetime(2017, 10, 26, 0, 0),
             'unavailable_until': datetime(2017, 10, 26, 23, 59)
+        }]
+    }
+
+
+@pytest.fixture
+def events_unavailability_defintion():
+    return {
+        'A very interesting talk': [{
+            'unavailable_from': datetime(2017, 10, 26, 0, 0),
+            'unavailable_until': datetime(2017, 10, 26, 11, 59)
         }]
     }
 
@@ -153,15 +163,26 @@ def test_types_and_events(events_definition):
     assert len(types_and_events) == 6
 
 
-def test_unavailability(
-    event_types, events_definition, venues, unavailability_defintion
+def test_people_unavailability(
+    event_types, events_definition, venues, people_unavailability_defintion
 ):
     types_and_slots = dn.types_and_slots(venues)
     slots = [item['slot'] for item in types_and_slots]
-    unavailability = dn.unavailability(
-        events_definition, slots, unavailability_defintion)
+    unavailability = dn.people_unavailability(
+        events_definition, slots, people_unavailability_defintion)
     print(unavailability)
-    assert list(unavailability.keys()) == [0, 1]
+    assert unavailability == {0: [0, 1, 2, 3], 1: [0, 1, 2, 3]}
+
+
+def test_events_unavailability(
+    event_types, events_definition, venues, events_unavailability_defintion
+):
+    types_and_slots = dn.types_and_slots(venues)
+    slots = [item['slot'] for item in types_and_slots]
+    unavailability = dn.events_unavailability(
+        events_definition, slots, events_unavailability_defintion)
+    print(unavailability)
+    assert unavailability == {2: [0, 1]}
 
 
 def test_clashes(events_definition, clashes_definition):

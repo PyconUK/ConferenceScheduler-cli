@@ -39,11 +39,23 @@ def events(resources):
 
 
 def unavailability(resources, slots):
-    unavailability = dn.unavailability(
-        resources['events'], slots, resources['unavailability'])
-    logger.debug(f'\nunavailability:\n{unavailability}')
-    logger.info(f'{len(unavailability)} person(s) with unavailability')
-    return unavailability
+    try:
+        people_unavailability = dn.people_unavailability(
+            resources['events'], slots, resources['unavailability']['people'])
+    except KeyError:
+        people_unavailability = {}
+    logger.debug(f'\npeople_unavailability:\n{people_unavailability}')
+    logger.info(f'{len(people_unavailability)} person(s) with unavailability')
+
+    try:
+        events_unavailability = dn.events_unavailability(
+            resources['events'], slots, resources['unavailability']['events'])
+    except KeyError:
+        events_unavailability = {}
+    logger.debug(f'\nevents_unavailability:\n{events_unavailability}')
+    logger.info(f'{len(events_unavailability)} event(s) with unavailability')
+
+    return {**people_unavailability, **events_unavailability}
 
 
 def clashes(resources):
