@@ -101,7 +101,7 @@ def add_unavailability_to_events(events, slots, unavailability):
             *[slots[s] for s in unavailable_slots])
     # logger.debug(f'\nevents with unavailability added:\n{pformat(events)}')
     logger.info(
-        f'Added unavailability for {len(unavailability)} person(s) to events.')
+        f'Added unavailability for {len(unavailability)} events.')
 
 
 def add_clashes_to_events(events, clashes):
