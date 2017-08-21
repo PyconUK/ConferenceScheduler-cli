@@ -1,15 +1,13 @@
 Changelog
 #########
 
-v0.8.0 (2017-08-21)
+v0.7.0 (2017-08-21)
 -------------------
 * Bug Fix: Remove use of strings for Slot.starts_at
 
 * New Feature: Unavailability and clashes can now be defined for events as well
   as people
 
-v0.7.0 (2017-08-20)
--------------------
 * New feature: Capacity objective now split into efficiency or equity
 
 v0.6.0 (2017-08-18)
