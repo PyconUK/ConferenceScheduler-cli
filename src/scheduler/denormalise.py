@@ -71,7 +71,7 @@ def types_and_events(events_definition):
         {
             'event_type': event['event_type'],
             'event': Event(
-                event['title'], event['duration'], demand=None,
+                event['title'], event['duration'], demand=event['demand'],
                 tags=event['tags'])
         }
         for event in events_definition]
