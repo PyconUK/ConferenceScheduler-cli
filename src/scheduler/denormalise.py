@@ -278,7 +278,7 @@ def allocations(allocations_definition):
                 'event': Event(
                     name=event,
                     duration=0,
-                    demand=None,
+                    demand=0,
                     tags=details['tags']),
                 'slot': Slot(
                     venue=details['venue'],
