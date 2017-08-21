@@ -1,6 +1,11 @@
 Changelog
 #########
 
+v0.8.0 (2017-08-21)
+-------------------
+* New Feature: --diff option to control logging of schedule diff
+
+
 v0.7.2 (2017-08-21)
 -------------------
 * Bug Fix: Consistency optimisation fixed
