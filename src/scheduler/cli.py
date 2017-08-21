@@ -36,6 +36,7 @@ def scheduler(verbosity):
     '--objective', '-o', default=None,
     type=click.Choice(['efficiency', 'equity', 'consistency']),
     help='Objective Function')
+@click.option('--diff/--no-diff', default=False, help='Show schedule diff')
 @click.option(
     '--input_dir', '-i', default=None, help='Directory for input files')
 @click.option(
@@ -43,7 +44,7 @@ def scheduler(verbosity):
 @click.option(
     '--build_dir', '-b', default=None, help='Directory for output yaml files')
 @timed
-def build(algorithm, objective, input_dir, solution_dir, build_dir):
+def build(algorithm, objective, diff, input_dir, solution_dir, build_dir):
     if input_dir:
         session.folders['input'] = Path(input_dir)
 
@@ -66,16 +67,19 @@ def build(algorithm, objective, input_dir, solution_dir, build_dir):
     defn.add_unsuitability_to_events(events, slots, unsuitability)
 
     kwargs = {}
-    if objective == 'consistency':
+    if objective == 'consistency' or diff:
         original_solution = io.import_solution()
         defn.add_allocations(events, slots, original_solution, allocations)
         original_schedule = solution_to_schedule(
             original_solution, events, slots)
+
+    if objective == 'consistency':
+        diff = True
         kwargs['original_schedule'] = original_schedule
 
     solution = calc.solution(events, slots, algorithm, objective, **kwargs)
 
-    if objective == 'consistency':
+    if diff:
         schedule = solution_to_schedule(solution, events, slots)
         event_diff = event_schedule_difference(schedule, original_schedule)
         logger.debug(f'\nevent_diff:')
