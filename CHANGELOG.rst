@@ -1,6 +1,10 @@
 Changelog
 #########
 
+v0.7.2 (2017-08-21)
+-------------------
+* Bug Fix: Consistency optimisation fixed
+
 v0.7.1 (2017-08-21)
 -------------------
 * Minor: Updated log message for Unavailability
