@@ -125,10 +125,17 @@ def events_unavailability_defintion():
 
 
 @pytest.fixture
-def clashes_definition():
+def people_clashes_definition():
     return {
         'owen-campbell': ['vincent-knight', 'joe-bloggs'],
         'vincent-knight': ['owen-campbell']
+    }
+
+
+@pytest.fixture
+def events_clashes_definition():
+    return {
+        'A slightly dull talk': ['A very interesting talk'],
     }
 
 
@@ -185,9 +192,14 @@ def test_events_unavailability(
     assert unavailability == {2: [0, 1]}
 
 
-def test_clashes(events_definition, clashes_definition):
-    clashes = dn.clashes(events_definition, clashes_definition)
+def test_people_clashes(events_definition, people_clashes_definition):
+    clashes = dn.people_clashes(events_definition, people_clashes_definition)
     assert clashes == ({0: [2, 3, 1], 1: [2, 3, 0], 2: [0, 1], 3: [], 4: [], 5: []}, 2)
+
+
+def test_events_clashes(events_definition, events_clashes_definition):
+    clashes = dn.events_clashes(events_definition, events_clashes_definition)
+    assert clashes == ({3: [2]})
 
 
 def test_unsuitability(venues, events_definition):
@@ -201,4 +213,3 @@ def test_allocations(allocations_definition):
     assert len(allocations) == len(allocations_definition)
     assert all(isinstance(item['event'], Event) for item in allocations)
     assert all(isinstance(item['slot'], Slot) for item in allocations)
-

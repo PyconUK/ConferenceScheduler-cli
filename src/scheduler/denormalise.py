@@ -178,7 +178,7 @@ def events_unavailability(events_definition, slots, unavailability_definition):
     }
 
 
-def clashes(events_definition, clashes_definition):
+def people_clashes(events_definition, clashes_definition):
     """
      Parameters
     ----------
@@ -225,6 +225,39 @@ def clashes(events_definition, clashes_definition):
         for event in events_definition if event['person'] == person
     }
     return clashes, count
+
+
+def events_clashes(events_definition, clashes_definition):
+    """
+     Parameters
+    ----------
+    events_definition : list
+        of dicts of the form
+            {'title': Event title,
+            'duration': <integer in minutes>,
+            'tags': <list of strings>,
+            'person': <string>,
+            'event_type': <string>}
+    clashes_definition : dict
+        mapping an event to a list of events they must not not be
+        scheduled against.
+
+    Returns
+    -------
+    dict
+        mapping the index of an event in the events list to a list of event
+        indexes against which it must not be scheduled.
+    """
+    clashes = {
+        events_definition.index(event): [
+            events_definition.index(t) for c in clashing_events
+            for t in events_definition
+            if t['title'] == c and
+            events_definition.index(event) != events_definition.index(t)]
+        for event_title, clashing_events in clashes_definition.items()
+        for event in events_definition if event['title'] == event_title
+    }
+    return clashes
 
 
 def unsuitability(types_and_slots, events_definition):
