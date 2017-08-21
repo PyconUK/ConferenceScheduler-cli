@@ -128,12 +128,10 @@ def build_output(resources, events, slots, solution):
     session.folders['build'].mkdir()
 
     day_format = '%A %-d'
-    slot_format = '%d-%b-%Y %H:%M'
     start_format = '%H:%M'
 
     for item in solution:
-        slot_time = datetime.strptime(
-            slots[item[1]].starts_at, slot_format)
+        slot_time = slots[item[1]].starts_at
         day = slot_time.strftime(day_format)
         start_time = slot_time.strftime(start_format)
         venue = slots[item[1]].venue

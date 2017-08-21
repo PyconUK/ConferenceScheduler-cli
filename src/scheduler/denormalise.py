@@ -8,23 +8,6 @@ from datetime import timedelta
 from conference_scheduler.resources import Event
 from conference_scheduler.resources import Slot
 
-DATETIME_FORMAT = '%d-%b-%Y %H:%M'
-
-
-def to_datetime(datetime_as_string):
-    """Convert a string representation of a date and time to a datetime object
-
-    Parameters
-    ----------
-    datetime_as_string :  str
-        in the form '2017-08-31 10:00'
-
-    Returns
-    -------
-        datetime.datetime
-    """
-    return datetime.strptime(datetime_as_string, DATETIME_FORMAT)
-
 
 def types_and_slots(timetable):
     """
@@ -56,8 +39,7 @@ def types_and_slots(timetable):
                 venue=venue,
                 starts_at=(
                     datetime.combine(day, datetime.min.time()) +
-                    timedelta(seconds=slot['starts_at'])
-                ).strftime(DATETIME_FORMAT),
+                    timedelta(seconds=slot['starts_at'])),
                 duration=slot.get('duration', 0),
                 session=f'{day} {session}',
                 capacity=slot.get('capacity', 0))
@@ -128,9 +110,9 @@ def people_unavailability(events_definition, slots, unavailability_definition):
             slots.index(slot)
             for period in periods
             for slot in slots
-            if period['unavailable_from'] <= to_datetime(slot.starts_at) and
+            if period['unavailable_from'] <= slot.starts_at and
             period['unavailable_until'] >= (
-                to_datetime(slot.starts_at) + timedelta(0, slot.duration * 60))
+                slot.starts_at + timedelta(0, slot.duration * 60))
         ]
         for person, periods in unavailability_definition.items()
         for event in events_definition if event['person'] == person
@@ -169,9 +151,9 @@ def events_unavailability(events_definition, slots, unavailability_definition):
             slots.index(slot)
             for period in periods
             for slot in slots
-            if period['unavailable_from'] <= to_datetime(slot.starts_at) and
+            if period['unavailable_from'] <= slot.starts_at and
             period['unavailable_until'] >= (
-                to_datetime(slot.starts_at) + timedelta(0, slot.duration * 60))
+                slot.starts_at + timedelta(0, slot.duration * 60))
         ]
         for event_title, periods in unavailability_definition.items()
         for event in events_definition if event['title'] == event_title
@@ -303,8 +285,7 @@ def allocations(allocations_definition):
                     starts_at=(datetime.combine(
                         details['day'],
                         datetime.min.time()) +
-                        timedelta(seconds=details['starts_at'])
-                    ).strftime(DATETIME_FORMAT),
+                        timedelta(seconds=details['starts_at'])),
                     duration=0,
                     session=(f'{details["day"]} {details["session"]}'),
                     capacity=0)
