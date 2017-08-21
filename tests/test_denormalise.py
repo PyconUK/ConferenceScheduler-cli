@@ -58,41 +58,48 @@ def events_definition():
             'duration': 45,
             'tags': ['plenary'],
             'person': 'owen-campbell',
-            'event_type': 'talk'
+            'event_type': 'talk',
+            'demand': 0
         },
         {
             'title': 'A very exciting talk',
             'duration': 30,
             'tags': ['talk'],
             'person': 'owen-campbell',
-            'event_type': 'talk'
+            'event_type': 'talk',
+            'demand': 0
         },
         {
             'title': 'A very interesting talk',
             'duration': 30,
             'tags': ['talk'],
             'person': 'vincent-knight',
-            'event_type': 'talk'
+            'event_type': 'talk',
+            'demand': 0
         },
         {
             'title': 'A slightly dull talk',
             'duration': 30,
             'tags': [],
             'person': 'joe-bloggs',
-            'event_type': 'talk'
+            'event_type': 'talk',
+            'demand': 0
         },
         {
             'title': 'A fascinating workshop',
             'duration': 90,
             'tags': ['talk'],
             'person': 'alice',
-            'event_type': 'workshop'},
+            'event_type': 'workshop',
+            'demand': 0
+        },
         {
             'title': 'A beginner workshop',
             'duration': 90,
             'tags': ['talk'],
             'person': 'bob',
-            'event_type': 'workshop'
+            'event_type': 'workshop',
+            'demand': 0
         }
     ]
 
