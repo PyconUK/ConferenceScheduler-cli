@@ -1,6 +1,10 @@
 Changelog
 #########
 
+v0.7.1 (2017-08-21)
+-------------------
+* Minor: Updated log message for Unavailability
+
 v0.7.0 (2017-08-21)
 -------------------
 * Bug Fix: Remove use of strings for Slot.starts_at
