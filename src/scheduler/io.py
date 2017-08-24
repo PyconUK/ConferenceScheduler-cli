@@ -108,7 +108,7 @@ def export_schedule(solution, events, slots):
     ]
     with csv_file.open('w') as f:
         writer = csv.DictWriter(
-            f, fieldnames=['event_index', 'slot_index', 'event', 'slot'])
+            f, fieldnames=['event_index', 'event', 'slot_index', 'slot'])
         writer.writeheader()
         for item in scheduled_items:
             writer.writerow(item)
