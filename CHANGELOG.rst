@@ -3,7 +3,7 @@ Changelog
 
 v0.8.1 (2017-08-24)
 -------------------
-Minor: Order of fields altered in schedule.csv
+* Minor: Order of fields altered in schedule.csv
 
 v0.8.0 (2017-08-21)
 -------------------
