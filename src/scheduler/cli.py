@@ -69,9 +69,11 @@ def build(algorithm, objective, diff, input_dir, solution_dir, build_dir):
     kwargs = {}
     if objective == 'consistency' or diff:
         original_solution = io.import_solution()
-        defn.add_allocations(events, slots, original_solution, allocations)
+        revised_solution = [
+            item for item in original_solution
+            if item[0] < len(events)]
         original_schedule = solution_to_schedule(
-            original_solution, events, slots)
+            revised_solution, events, slots)
 
     if objective == 'consistency':
         diff = True
