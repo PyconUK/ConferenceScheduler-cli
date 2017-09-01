@@ -1,6 +1,11 @@
 Changelog
 #########
 
+v0.8.2 (2017-09-01)
+-------------------
+* Bug Fix: Pre-allocated events were being scheduled in addition to their
+  pre-allocated slot when optimising for consistency
+
 v0.8.1 (2017-08-24)
 -------------------
 * Minor: Order of fields altered in schedule.csv
