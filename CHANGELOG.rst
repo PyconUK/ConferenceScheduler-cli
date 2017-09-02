@@ -1,6 +1,11 @@
 Changelog
 #########
 
+v0.8.3 (2017-09-02)
+-------------------
+* Bug Fix: Original schedule and new schedule were being passed to the diff
+  function in the wrong order
+
 v0.8.2 (2017-09-01)
 -------------------
 * Bug Fix: Pre-allocated events were being scheduled in addition to their
