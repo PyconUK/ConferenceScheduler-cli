@@ -83,7 +83,7 @@ def build(algorithm, objective, diff, input_dir, solution_dir, build_dir):
 
     if diff:
         schedule = solution_to_schedule(solution, events, slots)
-        event_diff = event_schedule_difference(schedule, original_schedule)
+        event_diff = event_schedule_difference(original_schedule, schedule)
         logger.debug(f'\nevent_diff:')
         for item in event_diff:
             logger.debug(f'{item.event.name} has moved from {item.old_slot.venue} at {item.old_slot.starts_at} to {item.new_slot.venue} at {item.new_slot.starts_at}')
