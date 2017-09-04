@@ -1,6 +1,10 @@
 Changelog
 #########
 
+v0.8.4 (2017-09-02)
+-------------------
+* Minor: Subtitles from proposals are now imported
+
 v0.8.3 (2017-09-02)
 -------------------
 * Bug Fix: Original schedule and new schedule were being passed to the diff
