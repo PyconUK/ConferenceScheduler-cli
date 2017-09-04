@@ -1,7 +1,7 @@
 Changelog
 #########
 
-v0.8.4 (2017-09-02)
+v0.8.4 (2017-09-04)
 -------------------
 * Minor: Subtitles from proposals are now imported
 
