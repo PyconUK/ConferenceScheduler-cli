@@ -19,7 +19,7 @@ def read(*names, **kwargs):
 
 setup(
     name='conference-scheduler-cli',
-    version='0.8.4',
+    version='0.9.0',
     license='MIT license',
     description='A command line tool to manage the schedule for a conference',
     long_description='%s\n%s' % (
