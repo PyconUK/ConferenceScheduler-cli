@@ -6,14 +6,15 @@ from pprint import pformat
 import daiquiri
 
 import scheduler.denormalise as dn
-from scheduler import io
+from scheduler import io, session
 
 logger = daiquiri.getLogger(__name__)
 
 
 def resources():
-    resources = io.import_yaml()
-    resources['events'] = io.import_proposals(resources)
+    resources = io.import_yaml(session.folders['input'])
+    resources['events'] = io.import_proposals(
+        resources, session.folders['input'])
     return resources
 
 
