@@ -79,7 +79,7 @@ def build(
 
     kwargs = {}
     if objective == 'consistency' or diff:
-        original_solution = io.import_solution()
+        original_solution = io.import_solution(session.folders['solution'])
         revised_solution = [
             item for item in original_solution
             if item[0] < len(events)]
@@ -103,8 +103,10 @@ def build(
         allocations = defn.allocations(resources)
         defn.add_allocations(events, slots, solution, allocations)
         logger.debug(convert.schedule_to_text(solution, events, slots))
-        io.export_solution_and_definition(resources, events, slots, solution)
-        io.build_output(resources, events, slots, solution)
+        io.export_solution_and_definition(
+            resources, events, slots, solution, session.folders['solution'])
+        io.build_output(
+            resources, events, slots, solution, session.folders['build'])
 
 
 @scheduler.command()
@@ -124,18 +126,18 @@ def validate(verbosity, input_dir, solution_dir, reload):
     if solution_dir:
         session.folders['solution'] = Path(solution_dir)
 
-    solution = io.import_solution()
+    solution = io.import_solution(session.folders['solution'])
 
     if reload:
         resources = defn.resources()
         events, slots = events_and_slots(resources)
-        original_solution = io.import_solution()
+        original_solution = io.import_solution(session.folders['solution'])
         solution = [
             item for item in original_solution
             if item[0] < len(events)]
     else:
-        solution = io.import_solution()
-        definition = io.import_schedule_definition()
+        solution = io.import_solution(session.folders['solution'])
+        definition = io.import_schedule_definition(session.folders['solution'])
         events = definition['events']
         slots = definition['slots']
 
@@ -166,14 +168,14 @@ def rebuild(verbosity, solution_dir, build_dir):
     if build_dir:
         session.folders['build'] = Path(build_dir)
 
-    solution = io.import_solution()
-    definition = io.import_schedule_definition()
+    solution = io.import_solution(session.folders['solution'])
+    definition = io.import_schedule_definition(session.folders['solution'])
     logger.info('Validating schedule...')
     if is_valid_solution(solution, definition['events'], definition['slots']):
         logger.info('Imported solution is valid')
         io.build_output(
             definition['resources'], definition['events'],
-            definition['slots'], solution)
+            definition['slots'], solution, session.folders['build'])
     else:
         for v in solution_violations(
                 solution, definition['events'], definition['slots']):
