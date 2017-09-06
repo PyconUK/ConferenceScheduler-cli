@@ -16,6 +16,19 @@ from scheduler import convert, io, logging, session
 logger = daiquiri.getLogger(__name__)
 
 
+def events_and_slots(resources):
+    slots = defn.slots(resources)
+    events = defn.events(resources)
+    unavailability = defn.unavailability(resources, slots)
+    clashes = defn.clashes(resources)
+    unsuitability = defn.unsuitability(resources, slots)
+
+    defn.add_unavailability_to_events(events, slots, unavailability)
+    defn.add_clashes_to_events(events, clashes)
+    defn.add_unsuitability_to_events(events, slots, unsuitability)
+    return events, slots
+
+
 @click.version_option(message='%(prog)s %(version)s :: UK Python Association')
 @click.group()
 @click.option(
@@ -23,10 +36,14 @@ logger = daiquiri.getLogger(__name__)
     type=click.Choice(['critical', 'error', 'warning', 'info', 'debug']),
     help='Logging verbosity')
 def scheduler(verbosity):
-    logging.setup(verbosity)
+    pass
 
 
 @scheduler.command()
+@click.option(
+    '--verbosity', '-v', default='info',
+    type=click.Choice(['critical', 'error', 'warning', 'info', 'debug']),
+    help='Logging verbosity')
 @click.option(
     '--algorithm', '-a', default='pulp_cbc_cmd',
     type=click.Choice(
@@ -44,7 +61,10 @@ def scheduler(verbosity):
 @click.option(
     '--build_dir', '-b', default=None, help='Directory for output yaml files')
 @timed
-def build(algorithm, objective, diff, input_dir, solution_dir, build_dir):
+def build(
+    verbosity, algorithm, objective, diff, input_dir, solution_dir, build_dir
+):
+    logging.setup(verbosity)
     if input_dir:
         session.folders['input'] = Path(input_dir)
 
@@ -55,16 +75,7 @@ def build(algorithm, objective, diff, input_dir, solution_dir, build_dir):
         session.folders['build'] = Path(build_dir)
 
     resources = defn.resources()
-    slots = defn.slots(resources)
-    events = defn.events(resources)
-    unavailability = defn.unavailability(resources, slots)
-    clashes = defn.clashes(resources)
-    unsuitability = defn.unsuitability(resources, slots)
-    allocations = defn.allocations(resources)
-
-    defn.add_unavailability_to_events(events, slots, unavailability)
-    defn.add_clashes_to_events(events, clashes)
-    defn.add_unsuitability_to_events(events, slots, unsuitability)
+    events, slots = events_and_slots(resources)
 
     kwargs = {}
     if objective == 'consistency' or diff:
@@ -89,6 +100,7 @@ def build(algorithm, objective, diff, input_dir, solution_dir, build_dir):
             logger.debug(f'{item.event.name} has moved from {item.old_slot.venue} at {item.old_slot.starts_at} to {item.new_slot.venue} at {item.new_slot.starts_at}')
 
     if solution is not None:
+        allocations = defn.allocations(resources)
         defn.add_allocations(events, slots, solution, allocations)
         logger.debug(convert.schedule_to_text(solution, events, slots))
         io.export_solution_and_definition(resources, events, slots, solution)
@@ -97,16 +109,38 @@ def build(algorithm, objective, diff, input_dir, solution_dir, build_dir):
 
 @scheduler.command()
 @click.option(
+    '--verbosity', '-v', default='info',
+    type=click.Choice(['critical', 'error', 'warning', 'info', 'debug']),
+    help='Logging verbosity')
+@click.option(
+    '--input_dir', '-i', default=None, help='Directory for input files')
+@click.option(
     '--solution_dir', '-s', default=None, help='Directory for solution files')
+@click.option(
+    '--reload/--no-reload', default=False, help='Reload YAML definition')
 @timed
-def validate(solution_dir):
+def validate(verbosity, input_dir, solution_dir, reload):
+    logging.setup(verbosity)
     if solution_dir:
         session.folders['solution'] = Path(solution_dir)
 
     solution = io.import_solution()
-    definition = io.import_schedule_definition()
+
+    if reload:
+        resources = defn.resources()
+        events, slots = events_and_slots(resources)
+        original_solution = io.import_solution()
+        solution = [
+            item for item in original_solution
+            if item[0] < len(events)]
+    else:
+        solution = io.import_solution()
+        definition = io.import_schedule_definition()
+        events = definition['events']
+        slots = definition['slots']
+
     logger.info('Validating schedule...')
-    if is_valid_solution(solution, definition['events'], definition['slots']):
+    if is_valid_solution(solution, events, slots):
         logger.info('Imported solution is valid')
     else:
         for v in solution_violations(
@@ -116,11 +150,16 @@ def validate(solution_dir):
 
 @scheduler.command()
 @click.option(
+    '--verbosity', '-v', default='info',
+    type=click.Choice(['critical', 'error', 'warning', 'info', 'debug']),
+    help='Logging verbosity')
+@click.option(
     '--solution_dir', '-s', default=None, help='Directory for solution files')
 @click.option(
     '--build_dir', '-b', default=None, help='Directory for output yaml files')
 @timed
-def rebuild(solution_dir, build_dir):
+def rebuild(verbosity, solution_dir, build_dir):
+    logging.setup(verbosity)
     if solution_dir:
         session.folders['solution'] = Path(solution_dir)
 

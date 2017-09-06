@@ -6,7 +6,7 @@ from pprint import pformat
 import daiquiri
 
 import scheduler.denormalise as dn
-from scheduler import io, session
+from scheduler import io
 
 logger = daiquiri.getLogger(__name__)
 
