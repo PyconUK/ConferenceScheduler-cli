@@ -1,7 +1,7 @@
 Changelog
 #########
 
-v0.9.0 (2017-09-04)
+v0.9.0 (2017-09-06)
 -------------------
 * New Feature: --reload option on validate command to control whether the
   conference definition is reloaded from input YAML files
