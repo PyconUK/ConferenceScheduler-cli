@@ -34,16 +34,15 @@ def import_proposals(resources, input_folder):
     with Path(input_folder, 'proposals.csv').open('r') as file:
         reader = csv.DictReader(file)
         for row in reader:
-            if row['session_type'] in resources['event_types']:
-                event_type = row['session_type']
-                proposals.append({
-                    'title': row['title'],
-                    'duration': int(row['duration']),
-                    'demand': float(row.get('demand', 0)),
-                    'person': slugify(row['name']),
-                    'tags': [row['tag']] if row['tag'] != '' else [],
-                    'subtitle': row['subtitle'],
-                    'event_type': event_type})
+            event_type = row['session_type']
+            proposals.append({
+                'title': row['title'],
+                'duration': int(row['duration']),
+                'demand': float(row.get('demand', 0)),
+                'person': slugify(row['name']),
+                'tags': [row['tag']] if row['tag'] != '' else [],
+                'subtitle': row['subtitle'],
+                'event_type': event_type})
     logger.debug(f'\nreources:\n{pformat(proposals)}')
     return proposals
 
