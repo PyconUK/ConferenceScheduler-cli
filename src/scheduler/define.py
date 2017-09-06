@@ -13,8 +13,10 @@ logger = daiquiri.getLogger(__name__)
 
 def resources():
     resources = io.import_yaml(session.folders['input'])
-    resources['events'] = io.import_proposals(
-        resources, session.folders['input'])
+    proposals = io.import_proposals(resources, session.folders['input'])
+    resources['proposals'] = proposals
+    resources['events'] = [
+        p for p in proposals if p['event_type'] in resources['event_types']]
     return resources
 
 
