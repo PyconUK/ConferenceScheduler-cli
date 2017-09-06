@@ -1,6 +1,12 @@
 Changelog
 #########
 
+v0.9.1 (2017-09-06)
+-------------------
+* Minor: io functions now take the working directories as arguments
+
+* Minor: All proposals now included in pickled resources
+
 v0.9.0 (2017-09-06)
 -------------------
 * New Feature: --reload option on validate command to control whether the
