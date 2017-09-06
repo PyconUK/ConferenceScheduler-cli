@@ -23,10 +23,14 @@ logger = daiquiri.getLogger(__name__)
     type=click.Choice(['critical', 'error', 'warning', 'info', 'debug']),
     help='Logging verbosity')
 def scheduler(verbosity):
-    logging.setup(verbosity)
+    pass
 
 
 @scheduler.command()
+@click.option(
+    '--verbosity', '-v', default='info',
+    type=click.Choice(['critical', 'error', 'warning', 'info', 'debug']),
+    help='Logging verbosity')
 @click.option(
     '--algorithm', '-a', default='pulp_cbc_cmd',
     type=click.Choice(
@@ -44,7 +48,10 @@ def scheduler(verbosity):
 @click.option(
     '--build_dir', '-b', default=None, help='Directory for output yaml files')
 @timed
-def build(algorithm, objective, diff, input_dir, solution_dir, build_dir):
+def build(
+    verbosity, algorithm, objective, diff, input_dir, solution_dir, build_dir
+):
+    logging.setup(verbosity)
     if input_dir:
         session.folders['input'] = Path(input_dir)
 
@@ -97,9 +104,14 @@ def build(algorithm, objective, diff, input_dir, solution_dir, build_dir):
 
 @scheduler.command()
 @click.option(
+    '--verbosity', '-v', default='info',
+    type=click.Choice(['critical', 'error', 'warning', 'info', 'debug']),
+    help='Logging verbosity')
+@click.option(
     '--solution_dir', '-s', default=None, help='Directory for solution files')
 @timed
-def validate(solution_dir):
+def validate(verbosity, solution_dir):
+    logging.setup(verbosity)
     if solution_dir:
         session.folders['solution'] = Path(solution_dir)
 
@@ -116,11 +128,16 @@ def validate(solution_dir):
 
 @scheduler.command()
 @click.option(
+    '--verbosity', '-v', default='info',
+    type=click.Choice(['critical', 'error', 'warning', 'info', 'debug']),
+    help='Logging verbosity')
+@click.option(
     '--solution_dir', '-s', default=None, help='Directory for solution files')
 @click.option(
     '--build_dir', '-b', default=None, help='Directory for output yaml files')
 @timed
-def rebuild(solution_dir, build_dir):
+def rebuild(verbosity, solution_dir, build_dir):
+    logging.setup(verbosity)
     if solution_dir:
         session.folders['solution'] = Path(solution_dir)
 
