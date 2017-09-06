@@ -40,6 +40,7 @@ def import_proposals(resources, input_folder):
                 'duration': int(row['duration']),
                 'demand': float(row.get('demand', 0)),
                 'person': slugify(row['name']),
+                'name': row['name'],
                 'tags': [row['tag']] if row['tag'] != '' else [],
                 'subtitle': row['subtitle'],
                 'event_type': event_type})
