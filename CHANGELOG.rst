@@ -1,6 +1,14 @@
 Changelog
 #########
 
+v0.9.0 (2017-09-04)
+-------------------
+* New Feature: --reload option on validate command to control whether the
+  conference definition is reloaded from input YAML files
+
+* Bug Fix: --help option threw an error if run outside a valid project folder
+  structure
+
 v0.8.4 (2017-09-04)
 -------------------
 * Minor: Subtitles from proposals are now imported
