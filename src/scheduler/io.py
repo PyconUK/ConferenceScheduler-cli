@@ -2,7 +2,6 @@ import csv
 import pickle
 from pathlib import Path
 from pprint import pformat
-import shutil
 
 import daiquiri
 from conference_scheduler import converter
@@ -121,33 +120,3 @@ def export_solution_and_definition(
     pickle_solution_and_definition(
         resources, events, slots, solution, solution_folder)
     export_schedule(solution, events, slots, solution_folder)
-
-
-def build_output(resources, events, slots, solution, build_folder):
-    """Create the yaml files required by the conference django-amber based
-    website for display of the programme"""
-    logger.info(f'Creating output files in {build_folder}...')
-    shutil.rmtree(build_folder, ignore_errors=True)
-    build_folder.mkdir()
-
-    day_format = '%A %-d'
-    start_format = '%H:%M'
-
-    for item in solution:
-        slot_time = slots[item[1]].starts_at
-        day = slot_time.strftime(day_format)
-        start_time = slot_time.strftime(start_format)
-        venue = slots[item[1]].venue
-
-        content = {
-            'chair': None,
-            'room': venue,
-            'date': day,
-            'time': start_time,
-            'title': events[item[0]].name,
-        }
-
-        folder = Path(build_folder, day, venue)
-        folder.mkdir(parents=True, exist_ok=True)
-        with Path(folder, start_time).open('a') as f:
-            yaml.dump(content, f)

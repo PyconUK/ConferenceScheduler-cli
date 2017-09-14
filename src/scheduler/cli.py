@@ -105,8 +105,6 @@ def build(
         logger.debug(convert.schedule_to_text(solution, events, slots))
         io.export_solution_and_definition(
             resources, events, slots, solution, session.folders['solution'])
-        io.build_output(
-            resources, events, slots, solution, session.folders['build'])
 
 
 @scheduler.command()
@@ -144,38 +142,6 @@ def validate(verbosity, input_dir, solution_dir, reload):
     logger.info('Validating schedule...')
     if is_valid_solution(solution, events, slots):
         logger.info('Imported solution is valid')
-    else:
-        for v in solution_violations(
-                solution, definition['events'], definition['slots']):
-            logger.error(v)
-
-
-@scheduler.command()
-@click.option(
-    '--verbosity', '-v', default='info',
-    type=click.Choice(['critical', 'error', 'warning', 'info', 'debug']),
-    help='Logging verbosity')
-@click.option(
-    '--solution_dir', '-s', default=None, help='Directory for solution files')
-@click.option(
-    '--build_dir', '-b', default=None, help='Directory for output yaml files')
-@timed
-def rebuild(verbosity, solution_dir, build_dir):
-    logging.setup(verbosity)
-    if solution_dir:
-        session.folders['solution'] = Path(solution_dir)
-
-    if build_dir:
-        session.folders['build'] = Path(build_dir)
-
-    solution = io.import_solution(session.folders['solution'])
-    definition = io.import_schedule_definition(session.folders['solution'])
-    logger.info('Validating schedule...')
-    if is_valid_solution(solution, definition['events'], definition['slots']):
-        logger.info('Imported solution is valid')
-        io.build_output(
-            definition['resources'], definition['events'],
-            definition['slots'], solution, session.folders['build'])
     else:
         for v in solution_violations(
                 solution, definition['events'], definition['slots']):
