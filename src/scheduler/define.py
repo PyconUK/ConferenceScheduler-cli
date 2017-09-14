@@ -98,6 +98,13 @@ def allocations(resources):
     return allocations
 
 
+def unbounded(resources):
+    unbounded = dn.unbounded(resources['unbounded'], resources['timetable'])
+    logger.debug(f'\nunbounded\n{unbounded}')
+    logger.info(f'{len(unbounded)} unbounded event(s)')
+    return unbounded
+
+
 def add_unavailability_to_events(events, slots, unavailability):
     for event, unavailable_slots in unavailability.items():
         events[event].add_unavailability(
@@ -124,7 +131,11 @@ def add_unsuitability_to_events(events, slots, unsuitability):
         'venue suitability.')
 
 
-def add_allocations(events, slots, solution, allocations):
+def add_allocations(events, slots, solution, allocations, unbounded):
+    for unbound in unbounded:
+        slots.append(unbound['slot'])
+
+    allocations.extend(unbounded)
     for allocation in allocations:
         events.append(allocation['event'])
 
@@ -134,3 +145,4 @@ def add_allocations(events, slots, solution, allocations):
         solution.append((event_idx, slot_idx))
 
     logger.info(f'Added {len(allocations)} pre-allocated event(s) to solution')
+    logger.info(f'Added {len(unbounded)} event(s) to solution')

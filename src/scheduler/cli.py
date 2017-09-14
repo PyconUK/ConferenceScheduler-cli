@@ -101,10 +101,12 @@ def build(
 
     if solution is not None:
         allocations = defn.allocations(resources)
-        defn.add_allocations(events, slots, solution, allocations)
+        unbounded = defn.unbounded(resources)
+        defn.add_allocations(events, slots, solution, allocations, unbounded)
         logger.debug(convert.schedule_to_text(solution, events, slots))
         io.export_solution_and_definition(
-            resources, events, slots, solution, session.folders['solution'])
+            resources, events, slots, allocations, solution,
+            session.folders['solution'])
 
 
 @scheduler.command()

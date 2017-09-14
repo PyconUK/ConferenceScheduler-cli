@@ -73,7 +73,7 @@ def import_schedule_definition(solution_folder):
 
 
 def pickle_solution_and_definition(
-    resources, events, slots, solution, solution_folder
+    resources, events, slots, allocations, solution, solution_folder
 ):
     """Store the computed solution, the resources dict and the associated
     events and slots lists in pickle format"""
@@ -84,6 +84,7 @@ def pickle_solution_and_definition(
         'resources': resources,
         'events': events,
         'slots': slots,
+        'allocations': allocations,
         'solution': solution
     }
     with pickle_file.open('wb') as f:
@@ -114,9 +115,9 @@ def export_schedule(solution, events, slots, solution_folder):
 
 
 def export_solution_and_definition(
-    resources, events, slots, solution, solution_folder
+    resources, events, slots, allocations, solution, solution_folder
 ):
     solution_folder.mkdir(exist_ok=True)
     pickle_solution_and_definition(
-        resources, events, slots, solution, solution_folder)
+        resources, events, slots, allocations, solution, solution_folder)
     export_schedule(solution, events, slots, solution_folder)

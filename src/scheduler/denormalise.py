@@ -294,3 +294,28 @@ def allocations(allocations_definition):
             for event, details in allocation.items()]
     except TypeError:
         return []
+
+
+def unbounded(unbound_definition, timetable):
+    return [
+        {
+            'event': Event(
+                name=event,
+                duration=0,
+                demand=0,
+                tags=[day, venue]),
+            'slot': Slot(
+                venue=venue,
+                starts_at=(datetime.combine(
+                    day,
+                    datetime.min.time()) +
+                    timedelta(seconds=details['starts_at'])),
+                duration=0,
+                session=f'{day} unbound',
+                capacity=0)
+        }
+        for unbound in unbound_definition
+        for event, details in unbound.items()
+        for venue, days in timetable.items()
+        for day in days
+    ]
