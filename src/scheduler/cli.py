@@ -77,6 +77,10 @@ def build(
     resources = defn.resources()
     events, slots = events_and_slots(resources)
 
+    logger.debug('Slots List:')
+    for idx, slot in enumerate(slots):
+        logger.debug(f'{idx}: {slot.starts_at} {slot.venue}')
+
     kwargs = {}
     if objective == 'consistency' or diff:
         original_solution = io.import_solution(session.folders['solution'])

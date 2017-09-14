@@ -42,6 +42,7 @@ def import_proposals(resources, input_folder):
                 'name': row['name'],
                 'tags': [row['tag']] if row['tag'] != '' else [],
                 'subtitle': row['subtitle'],
+                'description': row['description'],
                 'event_type': event_type})
     logger.debug(f'\nreources:\n{pformat(proposals)}')
     return proposals
