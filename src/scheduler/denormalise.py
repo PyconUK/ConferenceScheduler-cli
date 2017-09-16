@@ -277,7 +277,7 @@ def allocations(allocations_definition):
             {
                 'event': Event(
                     name=event,
-                    duration=0,
+                    duration=details['duration'],
                     demand=0,
                     tags=details['tags']),
                 'slot': Slot(
@@ -286,9 +286,9 @@ def allocations(allocations_definition):
                         details['day'],
                         datetime.min.time()) +
                         timedelta(seconds=details['starts_at'])),
-                    duration=0,
+                    duration=details['duration'],
                     session=(f'{details["day"]} {details["session"]}'),
-                    capacity=0)
+                    capacity=-1)
             }
             for allocation in allocations_definition
             for event, details in allocation.items()]
@@ -301,7 +301,7 @@ def unbounded(unbound_definition, timetable):
         {
             'event': Event(
                 name=event,
-                duration=0,
+                duration=details['duration'],
                 demand=0,
                 tags=[day, venue]),
             'slot': Slot(
@@ -310,7 +310,7 @@ def unbounded(unbound_definition, timetable):
                     day,
                     datetime.min.time()) +
                     timedelta(seconds=details['starts_at'])),
-                duration=0,
+                duration=details['duration'],
                 session=f'{day} unbound',
                 capacity=0)
         }
