@@ -1,6 +1,24 @@
 Changelog
 #########
 
+v0.10.0 (2017-09-16)
+--------------------
+* Breaking Change: Output markdown files are no longer produced
+
+* New Feature: The ability to add 'unbounded' events which occur in all rooms
+  on all days
+
+* Minor: Speaker names in their original form are included within the pickled
+  events dictionary
+
+* Minor: The full slots list, with index number, is included in the log file
+
+* Minor: Allocated and unbounded events now have tags added automatically
+  which ensure uniqueness (no longer necessary to use e.g. 'morning' tag)
+
+* Bug Fix: Durations for unbounded and allocated events are taken from their
+  definition (previously hard coded as zero)
+
 v0.9.1 (2017-09-06)
 -------------------
 * Minor: io functions now take the working directories as arguments
