@@ -279,7 +279,7 @@ def allocations(allocations_definition):
                     name=event,
                     duration=details['duration'],
                     demand=0,
-                    tags=details['tags']),
+                    tags=details['tags'] + [details['day'], details['venue']]),
                 'slot': Slot(
                     venue=details['venue'],
                     starts_at=(datetime.combine(
@@ -303,7 +303,7 @@ def unbounded(unbound_definition, timetable):
                 name=event,
                 duration=details['duration'],
                 demand=0,
-                tags=[day, venue]),
+                tags=details['tags'] + [day, venue]),
             'slot': Slot(
                 venue=venue,
                 starts_at=(datetime.combine(
