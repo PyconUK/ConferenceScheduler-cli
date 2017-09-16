@@ -77,9 +77,10 @@ def build(
     resources = defn.resources()
     events, slots = events_and_slots(resources)
 
-    logger.debug('Slots List:')
-    for idx, slot in enumerate(slots):
-        logger.debug(f'{idx}: {slot.starts_at} {slot.venue}')
+    slots_by_index = {
+        idx: f'{slot.starts_at} {slot.venue}'
+        for idx, slot in enumerate(slots)}
+    logger.debug(f'\nSlots List:\n{slots_by_index}')
 
     kwargs = {}
     if objective == 'consistency' or diff:
