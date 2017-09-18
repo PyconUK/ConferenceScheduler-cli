@@ -83,15 +83,13 @@ def build(
     logger.debug(f'\nSlots List:\n{slots_by_index}')
 
     kwargs = {}
-    if objective == 'consistency' or diff:
+    if objective == 'consistency' or algorithm == 'simulated_annealing' or diff:
         original_solution = io.import_solution(session.folders['solution'])
         revised_solution = [
             item for item in original_solution
             if item[0] < len(events)]
         original_schedule = solution_to_schedule(
             revised_solution, events, slots)
-
-    if objective == 'consistency':
         diff = True
         kwargs['original_schedule'] = original_schedule
 
