@@ -1,6 +1,10 @@
 Changelog
 #########
 
+Unreleased
+----------
+* Minor: Fix line ending of schedule.csv
+
 v0.10.0 (2017-09-16)
 --------------------
 * Breaking Change: Output markdown files are no longer produced
