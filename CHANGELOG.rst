@@ -1,8 +1,8 @@
 Changelog
 #########
 
-Unreleased
-----------
+v0.10.1 (2017-10-02)
+--------------------
 * Minor: Fix line ending of schedule.csv
 
 v0.10.0 (2017-09-16)
