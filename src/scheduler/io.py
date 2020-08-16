@@ -2,7 +2,7 @@ import csv
 import pickle
 from pathlib import Path
 from pprint import pformat
-
+import io
 import daiquiri
 from conference_scheduler import converter
 from ruamel.yaml import YAML
@@ -11,6 +11,21 @@ from slugify import slugify
 logger = daiquiri.getLogger(__name__)
 yaml = YAML(typ='safe')
 yaml.default_flow_style = False
+
+unsafe_builtins = {
+    'subprocess',
+    'os.system',
+}
+
+class RestrictedUnpickler(pickle.Unpickler):
+
+    def find_class(self, module, name):
+        # Only allow safe classes from builtins.
+        if module == "builtins" and name not in safe_builtins:
+            return getattr(builtins, name)
+        # Forbid everything else.
+        raise pickle.UnpicklingError("global '%s.%s' is forbidden" %
+                                     (module, name))
 
 
 def import_yaml(input_folder):
@@ -69,9 +84,12 @@ def import_schedule_definition(solution_folder):
     logger.info(
         f'Importing resources, events, slots and schedule from {pickle_file}')
     with pickle_file.open('rb') as f:
-        bundle = pickle.load(f)
+        bundle = restricted_loads(f.read())
     return bundle
 
+def restricted_loads(s):
+    """Helper function analogous to pickle.loads()."""
+    return RestrictedUnpickler(io.BytesIO(s)).load()
 
 def pickle_solution_and_definition(
     resources, events, slots, allocations, solution, solution_folder

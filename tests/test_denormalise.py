@@ -144,17 +144,19 @@ def allocations_definition():
     return [
         {'Another talk': {
             'person': 'charlie',
-            'tags': None,
+            'tags': [],
             'venue': 'Assembly Room',
             'day': datetime(2017, 10, 26, 0, 0),
             'session': 'afternoon',
+            'duration' : 30,
             'starts_at': 54000}},
         {'Another workshop': {
             'person': 'diane',
-            'tags': None,
+            'tags': [],
             'venue': 'Room C',
             'day': datetime(2017, 10, 26, 0, 0),
             'session': 'afternoon',
+            'duration' : 30,
             'starts_at': 54000}}]
 
 
