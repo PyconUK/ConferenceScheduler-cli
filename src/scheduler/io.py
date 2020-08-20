@@ -1,4 +1,6 @@
+import io
 import csv
+import builtins
 import pickle
 from pathlib import Path
 from pprint import pformat
@@ -12,6 +14,28 @@ logger = daiquiri.getLogger(__name__)
 yaml = YAML(typ='safe')
 yaml.default_flow_style = False
 
+
+safe_builtins = {
+    'range',
+    'complex',
+    'set',
+    'frozenset',
+    'slice',
+}
+
+class RestrictedUnpickler(pickle.Unpickler):
+
+    def find_class(self, module, name):
+        """Only allow safe classes from builtins"""
+        if module == "builtins" and name in safe_builtins:
+            return getattr(builtins, name)
+        """Forbid everything else"""
+        raise pickle.UnpicklingError("global '%s.%s' is forbidden" %
+                                     (module, name))
+
+def restricted_loads(s):
+    """Helper function analogous to pickle.loads()"""
+    return RestrictedUnpickler(io.BytesIO(s)).load()
 
 def import_yaml(input_folder):
     """Import all yaml files in the given folder into a single resources
@@ -69,6 +93,8 @@ def import_schedule_definition(solution_folder):
     logger.info(
         f'Importing resources, events, slots and schedule from {pickle_file}')
     with pickle_file.open('rb') as f:
+        """restricting unsafe pickle files"""
+        restricted_loads(f.read())
         bundle = pickle.load(f)
     return bundle
 
